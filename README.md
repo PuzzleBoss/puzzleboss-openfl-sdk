@@ -42,15 +42,15 @@ used to open the appstore and record the event in the Analytics.
 
 To open your game in the appstore:
 
-AppLink.open();
+    AppLink.open();
 
 To open any game in the appstore:
 
-AppLink.open("the_package_name");
+    AppLink.open("the_package_name");
 
 To open any game in the appstore including the NOOK store:
 
-AppLink.open("the_package_name", "the_ean");
+    AppLink.open("the_package_name", "the_ean");
 
 ## Rating prompt
 The rating prompt provides players with a dialogue asking them to rate the game.  It is best
@@ -78,11 +78,11 @@ to decide where and how to integrate in your game.
 To open a social media url, as with the AppLink, you can default to your own game with no parameters
 or specify a game.
 
-SocialButtons.twitter(pkg);
-SocialButtons.facebook(pkg, name);
-SocialButtons.pinterest(pkg, name);
-SocialButtons.email(pkg, name);
-socialButtons.googleplus(pkg);
+    SocialButtons.twitter(pkg);
+    SocialButtons.facebook(pkg, name);
+    SocialButtons.pinterest(pkg, name);
+    SocialButtons.email(pkg, name);
+    socialButtons.googleplus(pkg);
 
 We have included assets and an IconButton class that can help you create these:
 
