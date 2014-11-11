@@ -90,6 +90,14 @@ SocialButtons.pinterest(pkg, name);
 SocialButtons.email(pkg, name);
 socialButtons.googleplus(pkg);
 
+We have included assets and an IconButton class that can help you create these:
+
+    addChild(new IconButton("facebook", openFacebook);
+
+    private function openFacebook(e:Event):Void {
+        SocialButtons.facebook();
+    }
+
 ## Support
 The support screen allows customers to email PuzzleBoss with some device information included which
 is helpful debugging different store versions and tablets.
