@@ -63,13 +63,13 @@ The rating prompt provides players with a dialogue asking them to rate the game.
 used after a positive moment like a win where there is a natural pause + good will.  To
 activate the prompt just call something like:
 
-if(wins == 1) {
-    if(Rating.prompt(parent_display_object)) {
-        // we have a prompt now
-    } else {
-        // continue doing something else
+    if(wins == 1) {
+        if(Rating.prompt(parent_display_object)) {
+            // we have a prompt now
+        } else {
+            // continue doing something else
+        }
     }
-}
 
 Rating.prompt returns false if it is unable to attach the prompt, eg the player has said 'never'
 or already rated the game.
@@ -108,10 +108,10 @@ create a `new Support(my_close_method);` and add it to your display.
 Your close method takes one parameter, an Event, and will need to remove the support and then do whatever
 follows in your game, eg:
 
-private function closeSupport(e:Event):Void {
-    removeChild(support);
-    // then go to the homescreen or whatever
-}
+    private function closeSupport(e:Event):Void {
+        removeChild(support);
+        // then go to the homescreen or whatever
+    }
 
 ## Cross promotion
 The crosspromotion downloads JSON advertisements for games in the puzzleboss catalog.  It can be used in
