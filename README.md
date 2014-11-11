@@ -36,12 +36,6 @@ The path will prepend information from your Settings.hx file in the format:
 
     *action*/Settings.TYPE/Settings.PACKAGE/Settings.VENDOR/Settings.VERSION
 
-### Standard actions
-
-1.  Your game initializing (not resuming)
-2.  Your game resuming
-3.  Anything else you want to know
-
 ## App links
 When you are linking to an app the AppLink class will help ensure the right structure is
 used to open the appstore and record the event in the Analytics.
