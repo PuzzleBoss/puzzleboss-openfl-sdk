@@ -20,7 +20,7 @@ class Analytics {
     private static var session:Session;
     private static var tracker:Tracker;
 
-    public static function init():Void {
+    public static function initialize():Void {
 
         var realfirst = realFirst();
         var gamefirst = gameFirst();

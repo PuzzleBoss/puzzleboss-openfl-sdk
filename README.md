@@ -23,7 +23,7 @@ used in the analytics requests.
 
 You also need to create a 'share' image for your game when it is shared on eg Pinterest.
 
-You also need to `Images.initialize();` before using anything.
+You also need to `Images.initialize();` and `Analytics.initialize();` to get things ready.
 
 ## Analytics
 You will need to install "haxe-ga" which is Google Analytics via `haxelib install haxe-ga`.
