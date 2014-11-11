@@ -26,9 +26,8 @@ You also need to create a 'share' image for your game when it is shared on eg Pi
 You also need to `Images.initialize();` and `Analytics.initialize();` to get things ready.
 
 ## Analytics
-You will need to install "haxe-ga" which is Google Analytics via `haxelib install haxe-ga`.
-
-To log anything you wish to know you call:
+You will need to install "haxe-ga" which is Google Analytics via `haxelib install haxe-ga`.  To log
+anything you wish to know you call `Analytics.track` with whatever information starting with a '/'.
 
     Analytics.track(action);
 
