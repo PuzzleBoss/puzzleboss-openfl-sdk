@@ -115,3 +115,15 @@ create a single Promotion that can be shown at any point like an interstitial ad
 To create a "More games" screen, as with Support, `new MoreGames(my_close_method);`
 
 To create a single Promotion, `Promotion.create(my_close_method);`
+
+If you are going to use your own JSON you will need to modify CrossPromotion.hx to fetch it from your URL,
+and the expected format is:
+
+    {
+        "amazon": [
+                { "package": "com.hunter_hamster.SnailBob", "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }
+        ],
+        "google": [
+                { "package": "com.hunter_hamster.SnailBob", "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }
+        ]
+    }
