@@ -73,7 +73,7 @@ class Rating extends Sprite
         closebutton.x = updatebutton.x + updatebutton.width + 50;
         buttons.addChild(closebutton);
 
-        var neverbutton = new TextButton("Never", close);
+        var neverbutton = new TextButton("Never", never);
         neverbutton.x = closebutton.x + closebutton.width + 50;
         buttons.addChild(neverbutton);
 
