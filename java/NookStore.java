@@ -3,7 +3,7 @@ package com.puzzleboss.core;
 import android.content.Intent;
 import android.app.Activity;
 import android.util.Log;
-import org.haxe.nme.GameActivity;
+import org.haxe.lime.GameActivity;
 
 public class NookStore
 {
