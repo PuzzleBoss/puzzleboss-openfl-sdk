@@ -17,6 +17,14 @@ import org.haxe.lime.GameActivity;
 
 public class Social
 {
+    /**
+     * googleShare will try and use the Google+ app to share your url and
+     * if it is not installed / detected it will fallback to using the
+     * browser to share your alternate url.
+     *
+     * @param url the url you want to share through the app
+     * @param fallback the alternate url to share through the website
+     */
     public static void googleShare(final String url, final String fallback) {
 
         Activity currentActivity = GameActivity.getInstance();
@@ -38,6 +46,14 @@ public class Social
         currentActivity.startActivity(web);
     }
 
+    /**
+     * twitterShare will try and use the Twitter app to share your url and
+     * if it is not installed / detected it will fallback to using the
+     * browser to share your alternate url.
+     *
+     * @param url the url you want to share through the app
+     * @param fallback the alternate url to share through the website
+     */
     public static void twitterShare(final String tweet, final String fallback) {
 
         Activity currentActivity = GameActivity.getInstance();
@@ -77,7 +93,17 @@ public class Social
         currentActivity.startActivity(web);
     }
 
-    public static void pinterestShare(final String url, final String imageurl, final String name, final String fallback)
+    /**
+     * pinterestShare will try and use the Pinterest app to share your url and
+     * if it is not installed / detected it will fallback to using the
+     * browser to share your alternate url.
+     *
+     * @param url the url you want to share through the app
+     * @param imageurl the photo to accompany the post
+     * @param description the text to accompany the post
+     * @param fallback the alternate url to share through the website
+     */
+    public static void pinterestShare(final String url, final String imageurl, final String description, final String fallback)
     {
         Activity currentActivity = GameActivity.getInstance();
 
@@ -87,8 +113,9 @@ public class Social
                 PinIt pin = new PinIt();
                 pin.setImageUrl(imageurl);
                 pin.setUrl(url);
-                pin.setDescription(name);
+                pin.setDescription(description);
                 pin.doPinIt(currentActivity);
+                return;
             } catch( Exception e) {
             }
         }
@@ -97,6 +124,14 @@ public class Social
         currentActivity.startActivity(web);
     }
 
+    /**
+     * facebookShare will try and use the Facebook app to share your url and
+     * if it is not installed / detected it will fallback to using the
+     * browser to share your alternate url.
+     *
+     * @param url the url you want to share through the app
+     * @param fallback the alternate url to share through the website
+     */
     public static void facebookShare(final String url, final String fallback) {
 
         Activity currentActivity = GameActivity.getInstance();
@@ -117,9 +152,15 @@ public class Social
         currentActivity.startActivity(web);
     }
 
-    public static void emailShare(final String url, final String name) {
+    /**
+     * emailShare will send an email on the user's behalf.
+     *
+     * @param url the url you want to share through the app
+     * @param name the subject of the email
+     */
+    public static void emailShare(final String url, final String subject) {
         Intent email = new Intent(Intent.ACTION_SEND);
-        email.putExtra(Intent.EXTRA_SUBJECT, name);
+        email.putExtra(Intent.EXTRA_SUBJECT, subject);
         email.putExtra(Intent.EXTRA_TEXT, url);
         email.setType("message/rfc822");
 
@@ -127,12 +168,18 @@ public class Social
         currentActivity.startActivity(Intent.createChooser(email, "Choose an Email client:"));
     }
 
-    private static boolean appOwned(Activity activity, String uri) {
-
-        PackageManager pm = activity.getPackageManager();
-
+    /**
+     * appOwned scans the users apps to see if the nominated app
+     * package name is installed.
+     *
+     * @param activity the current acitivity
+     * @param pkg the package name
+     */
+    private static boolean appOwned(Activity activity, String pkg) {
+        
         try {
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            PackageManager pm = activity.getPackageManager();
+            pm.getPackageInfo(pkg, PackageManager.GET_ACTIVITIES);
             return true;
         }
         catch (PackageManager.NameNotFoundException e) {

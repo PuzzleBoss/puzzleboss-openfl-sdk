@@ -7,6 +7,14 @@ import org.haxe.lime.GameActivity;
 
 public class NookStore
 {
+    /**
+     * openShop will open the NOOK app store on their
+     * tablets to the specified app.
+     *
+     * You can get your EAN from the NOOK dashboard.
+     *
+     * @param ean the app id
+     */
     public static String openShop(final String ean) {
         Activity currentActivity = GameActivity.getInstance();
 
