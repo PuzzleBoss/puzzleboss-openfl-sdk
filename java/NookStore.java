@@ -7,20 +7,17 @@ import org.haxe.lime.GameActivity;
 
 public class NookStore
 {
-    public static String openShop(final String ean)
-    {
+    public static String openShop(final String ean) {
         Activity currentActivity = GameActivity.getInstance();
 
         Intent i = new Intent();
         i.setAction("com.bn.sdk.shop.details");
         i.putExtra("product_details_ean", ean);
 
-        try
-        {
+        try {
             currentActivity.startActivity(i);
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             Log.d("MainActivity", e.toString());
             GameActivity.launchBrowser("https://barnesandnoble.com");
         }
