@@ -5,6 +5,12 @@
 This SDK is designed to give PuzzleBoss games a consistent set of features
 including customer support, social media tools, crosspromotion and analytics.
 
+## License
+This SDK is MIT licensed, you should feel free to adapt it to your specific
+requirements with no branding, linking or attribution required in your games.
+
+Parts of it (such as the Pinterest SDK) carry their own licenses.
+
 ## Setting up your project
 
 You need to embed the images, font and java in your project.xml.  Exact paths may vary.
