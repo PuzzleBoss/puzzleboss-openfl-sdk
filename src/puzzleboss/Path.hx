@@ -17,50 +17,13 @@ class Path
     }
 
     public static function path():String {
-        #if (flash || html5)
-        return null;
-        #else
-
-        if(_path != null) {
-            return _path;
-        }
-
-        #if android
-        var prefix:String = FileSystem.exists("/media/") ? "/media/" : "/sdcard/";
-        #elseif ios
-        var prefix = SystemPath.applicationStorageDirectory;
-        #else
-        var prefix = SystemPath.userDirectory;
-
-        #if windows
-        prefix += "\\";
-        #else
-        prefix += "/";
-        #end
-        #end
-
-        if(!FileSystem.exists(prefix)) {
-            FileSystem.createDirectory(prefix);
-        }
-
-        prefix += "puzzleboss";
-
-        if(!FileSystem.exists(prefix)) {
-            FileSystem.createDirectory(prefix);
-        }
-
-        #if windows
-        prefix += "\\" + Settings.SHORT_NAME + "\\";
-        #else
-        prefix += "/" + Settings.SHORT_NAME + "/";
-        #end
-
-        if(!FileSystem.exists(prefix)) {
-            FileSystem.createDirectory(prefix);
-        }
-
-        _path = prefix;
+      if(_path != null) {
         return _path;
-        #end
+      }
+
+      var getpath = openfl.utils.JNI.createStaticMethod("com/puzzleboss/core/Path", "getPath", "(Ljava/lang/String;)Ljava/lang/String;");
+      _path = getpath(Settings.PUBLIC_STORAGE);
+
+      return _path;
     }
 }
