@@ -23,11 +23,12 @@ class MoreGames extends Sprite
 	private var next:Sprite;
 	private var onclose:Event->Void;
 
-	public function new(pscreen:Bool=true, pcontainer:Sprite = null, ponclose:Event) {
+	public function new(ponclose:Event->Void) {
 
 		super();
 		scrollRect = new Rectangle(0, 0, Images.WIDTH, Images.HEIGHT);
 		promotions = CrossPromotion.getGames(12);
+		onclose = ponclose;
 		addEventListener(Event.ADDED_TO_STAGE, init);
 		addEventListener(Event.REMOVED_FROM_STAGE, dispose);
 	}
