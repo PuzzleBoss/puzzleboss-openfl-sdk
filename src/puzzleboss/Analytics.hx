@@ -16,10 +16,15 @@ import sys.FileSystem;
 #end
 
 class Analytics {
+
     private static var visitor:Visitor;
     private static var session:Session;
     private static var tracker:Tracker;
 
+    /**
+     * initialize prepares the analytics package with your tracking
+     * code and player id
+     */
     public static function initialize():Void {
 
         var realfirst = realFirst();
@@ -37,6 +42,15 @@ class Analytics {
         tracker.addCustomVariable(new CustomVariable(0, "version", Settings.VERSION, 2));
     }
 
+    /**
+     * track will send a pageview to google analytics prefixed with
+     * your 'action' which must start with '/'.
+     *
+     * It will append the information from your Settings.hx to the url
+     * so you can segregate based on version, appstore etc.
+     *
+     * @param action your action, eg '/opened'
+     */
     public static function track(action:String):Void {
         if(tracker == null) {
             return;
@@ -51,6 +65,10 @@ class Analytics {
         tracker.trackPageview(page, session, visitor);
     }
 
+    /**
+     * realFirst checks if this is the nfirst time a player has been
+     * seen in any of your apps.
+     */
     private static function realFirst():Bool {
         #if (flash || html5)
         return gameFirst();
@@ -59,6 +77,10 @@ class Analytics {
         #end
     }
 
+    /**
+     * gameFirst checks whether this is the first time a player has
+     * been in this game
+     */
     private static function gameFirst():Bool {
         #if (flash || html5)
 
@@ -85,6 +107,9 @@ class Analytics {
         #end
     }
 
+    /**
+     * hasPlayerId checks if a playerid has been created
+     */
     private static function hasPlayerId():Bool {
         #if (flash || html5)
         return false;
@@ -94,6 +119,10 @@ class Analytics {
         #end
     }
 
+    /**
+     * getPlayerId returns and if necessary assigns a
+     * random numeric id to the player
+     */
     private static function getPlayerId():Int {
         #if (flash || html5)
         return 0;
