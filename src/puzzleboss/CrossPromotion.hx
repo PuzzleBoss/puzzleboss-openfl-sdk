@@ -35,7 +35,6 @@ class CrossPromotion
 
     public static function initialize(preserve:Bool = false)
     {
-        trace("initialize");
         if(!preserve)
         {
             GAMES = new Array<CrossPromotion>();
@@ -43,7 +42,7 @@ class CrossPromotion
 
         // load promotion games
         var path = Path.path();
-        var cachefile = path + ".jigsawpromotions.json";
+        var cachefile = path + "promotions.json";
         var url = "http://files2.puzzleboss.com/jigsawpromotions.json?" + Math.random();
         var loader = new URLLoader();
         var path = Path.path();
@@ -125,9 +124,7 @@ class CrossPromotion
                 cp.free = Reflect.hasField(gdata, "free") ? Reflect.getProperty(gdata, "free") : false;
                 cp.overlay = Reflect.hasField(gdata, "overlay") ? Reflect.getProperty(gdata, "overlay") : null;
                 cp.imageurl = Reflect.hasField(gdata, "imageurl") ? Reflect.getProperty(gdata, "imageurl") : null;
-
-                trace(cp.imageurl);
-
+                
                 if(hitoverlays != null)
                 {
                     cp.hitarea = hitoverlays[cp.overlay + (cp.free ? "_free" : "_buy")];
@@ -197,8 +194,6 @@ class CrossPromotion
 
     public static function getGames(num:Int):Array<CrossPromotion>
     {
-        trace("getGames", GAMES);
-
         if(GAMES == null || GAMES.length == 0)
         {
             return null;
@@ -206,7 +201,9 @@ class CrossPromotion
 
         var results = new Array<CrossPromotion>();
 
-        shuffleArray();
+        ArraySort.sort(GAMES, function(a:CrossPromotion, b:CrossPromotion):Int {
+            return Math.random() < 0.5 ? -1 : 1;
+        });
 
         for(game in GAMES)
         {
@@ -219,33 +216,6 @@ class CrossPromotion
         }
 
         return results;
-    }
-
-    private static function finalizeResultArray(results:Array<CrossPromotion>, num:Int):Array<CrossPromotion>
-    {
-        // remove exccess
-        while(results.length < num)
-        {
-            var first = results[Math.floor((Math.random() * results.length))];
-            var second = results[Math.floor((Math.random() * results.length))];
-
-            if(first == second)
-            {
-                continue;
-            }
-
-            results.remove(Math.random() < 0.5 ? first : second);
-        }
-
-        return results;
-    }
-
-    private static function shuffleArray()
-    {
-        ArraySort.sort(GAMES, function(a:CrossPromotion, b:CrossPromotion):Int
-        {
-            return Math.random() < 0.5 ? -1 : 1;
-        });
     }
 }
 #end

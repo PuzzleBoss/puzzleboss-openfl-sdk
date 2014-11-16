@@ -55,7 +55,7 @@ class MoreGames extends Sprite
 		prev.addChild(pbmp);
 		addChild(prev);
 		prev.x = 20;
-		prev.y = Math.floor((Images.HEIGHT - prev.height) / 2) - (prev.height / 2) + (300 * Images.SCALEY);
+		prev.y = Math.floor((Images.HEIGHT - prev.height) / 2);
 		Events.addUp(prev, prevGame, true);
 
 		var nbmp = new Bitmap();
@@ -74,6 +74,11 @@ class MoreGames extends Sprite
 	}
 
 	private function prevGame(e:Event):Void {
+
+		if(promotions == null) {
+			return;
+		}
+
 		index--;
 
 		if(index < 0) {
@@ -84,6 +89,11 @@ class MoreGames extends Sprite
 	}
 
 	private function nextGame(e:Event):Void {
+
+		if(promotions == null) {
+			return;
+		}
+
 		index++;
 
 		if(index >= promotions.length) {
@@ -94,6 +104,7 @@ class MoreGames extends Sprite
 	}
 
 	private function refresh(e:Event):Void {
+
 		if(promotions == null || index >= promotions.length) {
 			return;
 		}
