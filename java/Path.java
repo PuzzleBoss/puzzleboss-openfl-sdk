@@ -1,58 +1,16 @@
 package com.puzzleboss.core;
 
-import java.io.File;
-import android.util.Log;
-import java.lang.System;
+import org.haxe.lime.GameActivity;
 
 public class Path
 {
     /**
-     * getPath will return the publicly accessible path for Android,
-     * either the secondary storage, the misleadingly named 'external'
-     * storage, or falling back to /sdcard/ for older androids
+     * getPath will create and return a shared path for your apps to store
+     * whatever information needs to be shared between them.
      *
      * @param suffix your personal extension, eg /whatever/mycompany
      */
     public static String getPath(final String suffix) {
-
-      Log.i("getPath", suffix);
-
-      try {
-        String secStore = System.getenv("SECONDARY_STORAGE");
-
-        if(secStore != null) {
-          Log.i("using secStore", secStore);
-          return createPath(secStore, suffix);
-        }
-      }
-      catch(Exception e) {
-
-      }
-
-      try {
-        String extStore = System.getenv("EXTERNAL_STORAGE");
-
-        if(extStore != null) {
-          Log.i("using extStore", extStore);
-          return createPath(extStore, suffix);
-        }
-      }
-      catch(Exception e) {
-
-      }
-
-      Log.i("fallback", "sdcard");
-
-      return createPath("/sdcard", suffix);
-    }
-
-    private static String createPath(final String prefix, final String suffix) {
-
-      File f = new File(prefix + "/" + suffix + "/");
-
-      Log.i("creating path", f.getPath());
-      f.mkdirs();
-
-      return f.getPath();
+      return GameActivity.getInstance().getExternalFilesDir(suffix).getAbsolutePath();
     }
 }

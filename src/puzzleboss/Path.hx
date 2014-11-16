@@ -23,7 +23,6 @@ class Path
 
       var getpath = openfl.utils.JNI.createStaticMethod("com/puzzleboss/core/Path", "getPath", "(Ljava/lang/String;)Ljava/lang/String;");
       _path = getpath(Settings.PUBLIC_STORAGE);
-
       return _path;
     }
 }
