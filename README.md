@@ -19,6 +19,7 @@ You need to embed the images, font and java in your project.xml.  Exact paths ma
     <template path="java/Social.java" rename="src/com/puzzleboss/core/Social.java" if="android" />
     <template path="java/Support.java" rename="src/com/puzzleboss/core/Support.java" if="android" />
     <template path="java/NookStore.java" rename="src/com/puzzleboss/core/NookStore.java" if="android" />
+    <template path="java/Path.java" rename="src/com/puzzleboss/core/Path.java" if="android" />
     <assets path="images" rename="images" type="image" if="android" />
     <assets path="fonts" rename="fonts" include="DroidSansBold.ttf" if="android" />
     <haxelib name="haxe-ga" if="android" />
