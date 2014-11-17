@@ -39,11 +39,10 @@ Parts of it (such as the Pinterest SDK) carry their own licenses.
 5.  Initialize some stuff:
 
 	CrossPromotion.intialize(); // if you use it
-	
+
 	Images.initialize()
 
 	Analytics.initialize();
-
 
 ## Analytics
 You will need to install "haxe-ga" which is Google Analytics via `haxelib install haxe-ga`.  To log
