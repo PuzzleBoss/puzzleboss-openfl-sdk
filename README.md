@@ -15,15 +15,22 @@ Parts of it (such as the Pinterest SDK) carry their own licenses.
 
 You need to embed the images, font and java in your project.xml.  Exact paths may vary.
 
-    <java path="java/pinit-sdk-1.0.jar" if="android" />
-    <template path="java/Social.java" rename="src/com/puzzleboss/core/Social.java" if="android" />
-    <template path="java/Support.java" rename="src/com/puzzleboss/core/Support.java" if="android" />
-    <template path="java/NookStore.java" rename="src/com/puzzleboss/core/NookStore.java" if="android" />
-    <template path="java/Path.java" rename="src/com/puzzleboss/core/Path.java" if="android" />
-    <assets path="images" rename="images" type="image" if="android" />
-    <assets path="fonts" rename="fonts" include="DroidSansBold.ttf" if="android" />
-    <haxelib name="haxe-ga" if="android" />
-    <haxelib name="actuate" if="android" />
+	<java path="java/pinit-sdk-1.0.jar" if="android" />
+	<template path="java/Social.java" rename="src/com/puzzleboss/core/Social.java" if="android" />
+	<template path="java/Support.java" rename="src/com/puzzleboss/core/Support.java" if="android" />
+	<template path="java/NookStore.java" rename="src/com/puzzleboss/core/NookStore.java" if="android" />
+	<template path="java/Path.java" rename="src/com/puzzleboss/core/Path.java" if="android" />
+	<assets path="images" rename="images" type="image" if="android" />
+	<assets path="fonts" rename="fonts" include="DroidSansBold.ttf" if="android" />
+	<haxelib name="haxe-ga" if="android" />
+	<haxelib name="actuate" if="android" />
+
+In your [AndroidManifest.xml](http://labe.me/en/blog/posts/2013-06-28-OpenFL-AndroidManifest.xml-and-greater-Android-SDK-version.html#.Uovh58SfhKc) you need to include these permissions:
+
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.STORAGE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 You also need to enter your game information in the Settings.hx file, this information is
 used in the analytics requests.
@@ -36,11 +43,11 @@ You also need to `Images.initialize();` and `Analytics.initialize();` to get thi
 You will need to install "haxe-ga" which is Google Analytics via `haxelib install haxe-ga`.  To log
 anything you wish to know you call `Analytics.track` with whatever information starting with a '/'.
 
-    Analytics.track(action);
+	Analytics.track(action);
 
 The path will prepend information from your Settings.hx file in the format:
 
-    *action*/Settings.TYPE/Settings.PACKAGE/Settings.VENDOR/Settings.VERSION
+	*action*/Settings.TYPE/Settings.PACKAGE/Settings.VENDOR/Settings.VERSION
 
 ## App links
 When you are linking to an app the AppLink class will help ensure the right structure is
@@ -48,28 +55,28 @@ used to open the appstore and record the event in the Analytics.
 
 To open your game in the appstore:
 
-    AppLink.open();
+	AppLink.open();
 
 To open any game in the appstore:
 
-    AppLink.open("the_package_name");
+	AppLink.open("the_package_name");
 
 To open any game in the appstore including the NOOK store:
 
-    AppLink.open("the_package_name", "the_ean");
+	AppLink.open("the_package_name", "the_ean");
 
 ## Rating prompt
 The rating prompt provides players with a dialogue asking them to rate the game.  It is best
 used after a positive moment like a win where there is a natural pause + good will.  To
 activate the prompt just call something like:
 
-    if(wins == 1) {
-        if(Rating.prompt(parent_display_object)) {
-            // we have a prompt now
-        } else {
-            // continue doing something else
-        }
-    }
+	if(wins == 1) {
+		if(Rating.prompt(parent_display_object)) {
+			// we have a prompt now
+		} else {
+			// continue doing something else
+		}
+	}
 
 Rating.prompt returns false if it is unable to attach the prompt, eg the player has said 'never'
 or already rated the game.
@@ -84,19 +91,19 @@ to decide where and how to integrate in your game.
 To open a social media url, as with the AppLink, you can default to your own game with no parameters
 or specify a game.
 
-    SocialButtons.twitter(pkg);
-    SocialButtons.facebook(pkg, name);
-    SocialButtons.pinterest(pkg, name);
-    SocialButtons.email(pkg, name);
-    socialButtons.googleplus(pkg);
+	SocialButtons.twitter(pkg);
+	SocialButtons.facebook(pkg, name);
+	SocialButtons.pinterest(pkg, name);
+	SocialButtons.email(pkg, name);
+	socialButtons.googleplus(pkg);
 
 We have included assets and an IconButton class that can help you create these:
 
-    addChild(new IconButton("facebook", openFacebook);
+	addChild(new IconButton("facebook", openFacebook);
 
-    private function openFacebook(e:Event):Void {
-        SocialButtons.facebook();
-    }
+	private function openFacebook(e:Event):Void {
+		SocialButtons.facebook();
+	}
 
 ## Support
 The support screen allows customers to email PuzzleBoss with some device information included which
@@ -108,10 +115,10 @@ create a `new Support(my_close_method);` and add it to your display.
 Your close method takes one parameter, an Event, and will need to remove the support and then do whatever
 follows in your game, eg:
 
-    private function closeSupport(e:Event):Void {
-        removeChild(support);
-        // then go to the homescreen or whatever
-    }
+	private function closeSupport(e:Event):Void {
+		removeChild(support);
+		// then go to the homescreen or whatever
+	}
 
 ## Cross promotion
 The crosspromotion downloads JSON advertisements for games in the puzzleboss catalog.  It can be used in
@@ -125,11 +132,11 @@ To create a single Promotion, `Promotion.create(my_close_method);`
 If you are going to use your own JSON you will need to modify CrossPromotion.hx to fetch it from your URL,
 and the expected format is:
 
-    {
-        "amazon": [
-                { "package": "com.hunter_hamster.SnailBob", "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }
-        ],
-        "google": [
-                { "package": "com.hunter_hamster.SnailBob", "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }
-        ]
-    }
+	{
+		"amazon": [
+				{ "package": "com.hunter_hamster.SnailBob", "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }
+		],
+		"google": [
+				{ "package": "com.hunter_hamster.SnailBob", "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }
+		]
+	}
