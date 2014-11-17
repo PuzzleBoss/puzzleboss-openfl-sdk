@@ -13,7 +13,7 @@ Parts of it (such as the Pinterest SDK) carry their own licenses.
 
 ## Setting up your project
 
-1.  Embed the images, font and java in your project.xml.  Exact paths may vary.
+1.  Embed the images, font and java in your project.xml:
 
 	<java path="java/pinit-sdk-1.0.jar" if="android" />
 	<template path="java/Social.java" rename="src/com/puzzleboss/core/Social.java" if="android" />
@@ -25,7 +25,7 @@ Parts of it (such as the Pinterest SDK) carry their own licenses.
 	<assets path="fonts" rename="fonts" include="DroidSansBold.ttf" if="android" />
 	<haxelib name="haxe-ga" if="android" />
 	<haxelib name="actuate" if="android" />
-	<haxeflag name="-D nook" if="never" /> <!-- to activate nook store linking -->
+	<haxeflag name="-D nook" if="change_to_android_for_nook_linking" />
 
 2.  In your [AndroidManifest.xml](http://labe.me/en/blog/posts/2013-06-28-OpenFL-AndroidManifest.xml-and-greater-Android-SDK-version.html#.Uovh58SfhKc) you need to include these permissions:
 
