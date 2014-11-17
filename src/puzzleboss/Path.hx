@@ -1,28 +1,27 @@
 package puzzleboss;
 
-#if (!html5 && !flash)
-import sys.io.File;
-import sys.io.FileOutput;
-import sys.io.FileInput;
-import sys.FileSystem;
+#if android
+import openfl.utils.JNI;
 #end
 
-class Path
-{
-    private static var _path:String = null;
+class Path {
 
-    public static function reset():Void {
-        _path = null;
-        path();
-    }
+	private static inline var JNI_PATH:String = "com/puzzleboss/core/Path";
+	private static inline var JNI_SIGNATURE:String = "(Ljava/lang/String;)Ljava/lang/String;";
+	private static var _path:String = null;
 
-    public static function path():String {
-      if(_path != null) {
-        return _path;
-      }
+	public static function reset() {
+		_path = null;
+		path();
+	}
 
-      var getpath = openfl.utils.JNI.createStaticMethod("com/puzzleboss/core/Path", "getPath", "(Ljava/lang/String;)Ljava/lang/String;");
-      _path = getpath(Settings.PUBLIC_STORAGE);
-      return _path;
-    }
+	public static function path():String {
+		if (_path != null) {
+			return _path;
+		}
+
+		var getpath = JNI.createStaticMethod(JNI_PATH, "getPath", JNI_SIGNATURE);
+		_path = getpath(Settings.PUBLIC_STORAGE);
+		return _path;
+	}
 }

@@ -19,7 +19,7 @@ class TextButton extends ImageButton {
 		label = new Label(ptext, 14);
 		addChild(label);
 
-		if(upimg != null) {
+		if (upimg != null) {
 			label.x = Math.floor((upimg.width - label.width) / 2);
 			label.centerVertically(upimg.height);
 		}

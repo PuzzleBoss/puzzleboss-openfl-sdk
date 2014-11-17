@@ -12,138 +12,140 @@ import flash.Lib;
 import Lambda;
 
 class Images {
-    private static var CACHE:Map<String, BitmapData> = null;
-    public static var WIDTH:Int;
-    public static var HEIGHT:Int;
-    public static var SCALEX:Float;
-    public static var SCALEY:Float;
-    private static var TARGETWIDTH:Int = 2560;
-    private static var TARGETHEIGHT:Int = 1600;
+	private static var _cache:Map<String, BitmapData> = null;
+	public static var width:Int;
+	public static var height:Int;
+	public static var scaleX:Float;
+	public static var scaleY:Float;
+	private static inline var TARGETWIDTH:Int = 2560;
+	private static inline var TARGETHEIGHT:Int = 1600;
 
-    public static function initialize():Void {
+	public static function initialize() {
 
-        if(CACHE == null) {
-            CACHE = new Map<String, BitmapData>();
-        }
+		if (_cache == null) {
+			_cache = new Map<String, BitmapData>();
+		}
 
-        WIDTH = Lib.current.stage.stageWidth;
-        HEIGHT = Lib.current.stage.stageHeight;
-        SCALEX = WIDTH / TARGETWIDTH;
-        SCALEY = HEIGHT / TARGETHEIGHT;
-    }
+		width = Lib.current.stage.stageWidth;
+		height = Lib.current.stage.stageHeight;
+		scaleX = width / TARGETWIDTH;
+		scaleY = height / TARGETHEIGHT;
+	}
 
-    public static function loadBitmap(image:String, parent:DisplayObject, flipped:Bool = false):Void {
-        var img = load(image);
+	public static function attach(image:String, parent:DisplayObject, flipped:Bool = false) {
+		var img = load(image);
 
-        if(flipped) {
-            img = flip(img);
-        }
+		if (flipped) {
+			img = _flip(img);
+		}
 
-        if(Std.is(parent, Bitmap)) {
-            cast(parent, Bitmap).bitmapData = img;
-        }
-        else if(Std.is(parent, Sprite)) {
-            cast(parent, Sprite).addChild(new Bitmap(img));
-        }
-    }
+		if (Std.is(parent, Bitmap)) {
+			cast(parent, Bitmap).bitmapData = img;
+		}
+		else if (Std.is(parent, Sprite)) {
+			cast(parent, Sprite).addChild(new Bitmap(img));
+		}
+	}
 
-    public static function load(image:String):BitmapData {
-        var key = "images." + image;
+	public static function load(image:String):BitmapData {
+		var key = "images." + image;
 
-        if(image.indexOf(".") == -1) {
-            image += ".png";
-        }
+		if (image.indexOf(".") == -1) {
+			image += ".png";
+		}
 
-        if(CACHE[key] == null) {
-            var bmp = Assets.getBitmapData("images/" + image, false);
+		if (_cache[key] == null) {
+			var bmp = Assets.getBitmapData("images/" + image, false);
 
-            if(image != "playstore" && image != "amazonstore" && (SCALEX != 1 || SCALEY != 1)) {
-                bmp = resize(bmp, SCALEX);
-            }
+			if (image != "playstore" && image != "amazonstore" && (scaleX != 1 || scaleY != 1)) {
+				bmp = _resize(bmp, scaleX);
+			}
 
-            CACHE[key] = bmp;
-        }
+			_cache[key] = bmp;
+		}
 
-        return CACHE[key];
-    }
+		return _cache[key];
+	}
 
-    static function resize(pic:BitmapData, scale:Float = 0, width:Int = 0, height:Int = 0, basewidth:Int = 0, baseheight:Int = 0):BitmapData {
-        var scaled:BitmapData;
+	private static function _resize(pic:BitmapData, scale:Float=0, width:Int=0, height:Int=0,
+	basewidth:Int=0, baseheight:Int=0):BitmapData {
 
-        // just cropping off the bottom or right
-        if(width == pic.width || height == pic.height) {
-            return pic;
-        }
+		var scaled:BitmapData;
 
-        if(basewidth == 0) {
-            basewidth = scale > 0 ? Std.int(pic.width * scale) : pic.width;
-        }
+		// just cropping off the bottom or right
+		if (width == pic.width || height == pic.height) {
+			return pic;
+		}
 
-        if(baseheight == 0) {
-            baseheight = scale > 0 ? Std.int(pic.height * scale) : pic.height;
-        }
+		if (basewidth == 0) {
+			basewidth = scale > 0 ? Std.int(pic.width * scale) : pic.width;
+		}
 
-        // resizing
-        var matrix = new Matrix();
+		if (baseheight == 0) {
+			baseheight = scale > 0 ? Std.int(pic.height * scale) : pic.height;
+		}
 
-        if(scale == 0) {
-            matrix.scale(width / basewidth, height / baseheight);
-        }
-        else {
-            matrix.scale(scale, scale);
-        }
+		// resizing
+		var matrix = new Matrix();
 
-        if(basewidth == 0) {
-            basewidth = WIDTH;
-        }
+		if (scale == 0) {
+			matrix.scale(width / basewidth, height / baseheight);
+		}
+		else {
+			matrix.scale(scale, scale);
+		}
 
-        if(baseheight == 0) {
-            baseheight = HEIGHT;
-        }
+		if (basewidth == 0) {
+			basewidth = width;
+		}
 
-        var pw:Int = Std.int(Math.ceil(pic.width * matrix.a));
-        var ph:Int = Std.int(Math.ceil(pic.height * matrix.d));
+		if (baseheight == 0) {
+			baseheight = height;
+		}
 
-        if(width > 0 && width != pw) {
-            pw = width;
-        }
+		var pw:Int = Std.int(Math.ceil(pic.width * matrix.a));
+		var ph:Int = Std.int(Math.ceil(pic.height * matrix.d));
 
-        if(height > 0 && height != ph) {
-            ph = height;
-        }
+		if (width > 0 && width != pw) {
+			pw = width;
+		}
 
-        matrix.identity();
-        matrix.scale(pw / pic.width, ph / pic.height);
+		if (height > 0 && height != ph) {
+			ph = height;
+		}
 
-        scaled = new BitmapData(pw, ph, true, 0x00000000);
-        scaled.draw(pic, matrix);
+		matrix.identity();
+		matrix.scale(pw / pic.width, ph / pic.height);
 
-        if(width == 0 && height == 0) {
-            return scaled;
-        }
+		scaled = new BitmapData(pw, ph, true, 0x00000000);
+		scaled.draw(pic, matrix);
 
-        // cropping
-        if(width > 0 && scaled.width > width) {
-            return crop(scaled, new Rectangle(Math.ceil((scaled.width - width) / 2), 0, width, scaled.height));
-        }
+		if (width == 0 && height == 0) {
+			return scaled;
+		}
 
-        if(height > 0 && scaled.height > height) {
-            return crop(scaled, new Rectangle(0, Math.ceil((scaled.height - height) / 2), scaled.width, height));
-        }
+		// cropping
+		if (width > 0 && scaled.width > width) {
+			return _crop(scaled, new Rectangle(Math.ceil((scaled.width - width) / 2), 0, width, scaled.height));
+		}
 
-        return scaled;
-    }
+		if (height > 0 && scaled.height > height) {
+			return _crop(scaled, new Rectangle(0, Math.ceil((scaled.height - height) / 2), scaled.width, height));
+		}
 
-    private static function crop(pic:BitmapData, rect:Rectangle):BitmapData {
-        var cropped = new BitmapData(Std.int(rect.width), Std.int(rect.height));
-        cropped.draw(pic);
-        return cropped;
-    }
+		return scaled;
+	}
 
-    private static function flip(b:BitmapData):BitmapData {
-        var m = new Matrix( -1, 0, 0, 1, b.width, 0);
-        var b2 = new BitmapData(b.width, b.height, true, 0x00000000);
-        b2.draw(b, m);
-        return b2;
-    }
+	private static function _crop(pic:BitmapData, rect:Rectangle):BitmapData {
+		var cropped = new BitmapData(Std.int(rect.width), Std.int(rect.height));
+		cropped.draw(pic);
+		return cropped;
+	}
+
+	private static function _flip(b:BitmapData):BitmapData {
+		var m = new Matrix( -1, 0, 0, 1, b.width, 0);
+		var b2 = new BitmapData(b.width, b.height, true, 0x00000000);
+		b2.draw(b, m);
+		return b2;
+	}
 }

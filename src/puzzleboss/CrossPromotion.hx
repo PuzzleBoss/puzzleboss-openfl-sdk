@@ -1,13 +1,9 @@
 #if (!html5 && !flash)
 package puzzleboss;
 
-import flash.display.Bitmap;
 import flash.display.BitmapData;
-import flash.display.Loader;
 import flash.events.Event;
-import flash.events.ProgressEvent;
 import flash.geom.Rectangle;
-import flash.net.URLLoader;
 import flash.net.URLRequest;
 import haxe.Timer;
 import sys.io.File;
@@ -15,207 +11,117 @@ import sys.io.FileOutput;
 import sys.io.FileInput;
 import sys.FileSystem;
 import haxe.ds.ArraySort;
+import haxe.Json;
 
-class CrossPromotion
-{
-    public static var GAMES:Array<CrossPromotion>;
-    public static var READY:Bool = false;
+class CrossPromotion {
 
-    public var name:String;
-    public var shortname:String;
-    public var ean:String;
-    public var pkg:String;
-    public var comp:Bool;
-    public var free:Bool;
-    public var overlay:String;
-    public var hitarea:Rectangle;
-    public var imageurl:String;
+	private static inline var THREE_DAYS:Int = 259200;
+	public static var ready:Bool = false;
+	private static var _games:Array<CrossPromotion> = null;
 
-    public function new() { }
+	public var ean:String;
+	public var pkg:String;
+	public var imageurl:String;
 
-    public static function initialize(preserve:Bool = false)
-    {
-        if(!preserve)
-        {
-            GAMES = new Array<CrossPromotion>();
-        }
+	public function new() {
+	}
 
-        // load promotion games
-        var path = Path.path();
-        var cachefile = path + "promotions.json";
-        var url = "http://files2.puzzleboss.com/jigsawpromotions.json?" + Math.random();
-        var loader = new URLLoader();
-        var path = Path.path();
+	public static function initialize(preserve:Bool = false) {
+		if (!preserve) {
+			_games = [];
+		}
 
-        function complete(e:Event)
-        {
-            var json:Dynamic = null;
+		// load promotion _games
+		var path = Path.path();
+		var cachefile = path + "promotions.json";
+		var url = "http://files2.puzzleboss.com/jigsawpromotions.json?" + Math.random();
+		var loader = new URLLoader(_processData);
+		var path = Path.path();
 
-            try
-            {
-                json = haxe.Json.parse(loader.data);
-            }
-            catch(s:String)
-            {
-                return;
-            }
+		#if !flash
+		if (FileSystem.exists(cachefile)) {
+			var cached = File.getContent(cachefile);
+			var json = haxe.Json.parse(cached);
+			var cdate = json.cached;
+			var cnow = Timer.stamp();
 
-            if(json == null)
-            {
-                return;
-            }
+			// cache for 3 days
+			var diff = cnow - cdate;
 
-            var games:Array<Dynamic> = Reflect.getProperty(json, Settings.VENDOR);
-            var hitareas:Dynamic = Reflect.getProperty(json, "hitareas");
-            var hitoverlays:Map<String, Rectangle> = null;
+			if (diff < THREE_DAYS) {
+				loader.data = cached;
+				_processData(loader);
+				return;
+			}
+			else {
+				FileSystem.deleteFile(cachefile);
+			}
+		}
+		#end
 
-            #if nook
-            var res = "1920x1200";
-            var adjustx = Images.WIDTH / 1920;
-            var adjusty = Images.HEIGHT / 1200;
-            #else
-            var res = "2560x1600";
-            var adjustx = Images.SCALEX;//;Images.WIDTH / 2560;
-            var adjusty = Images.SCALEY;//;Images.HEIGHT / 1600;
-            #end
+		try {
+			loader.load(new URLRequest(url));
+		}
+		catch(s:String)
+		{
+		}
+	}
 
-            if(Reflect.hasField(json, "hitareas"))
-            {
-                var resolution:Dynamic = Reflect.getProperty(json.hitareas, res);
-                hitoverlays = new Map<String, Rectangle>();
+	private static function _processData(loader:URLLoader) {
+		var json:Dynamic = null;
 
-                for(f in Reflect.fields(resolution))
-                {
-                    var obj = Reflect.getProperty(resolution, f);
-                    var free = Reflect.getProperty(obj, "free").split(",");
-                    var buy = Reflect.getProperty(obj, "buy").split(",");
+		try {
+			json = Json.parse(loader.data);
+		}
+		catch(s:String) {
+			return;
+		}
 
-                    var free = new Rectangle(free[0], free[1], free[2], free[3]);
-                    free.x *= adjustx;
-                    free.y *= adjusty;
-                    free.width *= adjustx;
-                    free.height *= adjusty;
+		if (json == null) {
+			return;
+		}
 
-                    var buy = new Rectangle(buy[0], buy[1], buy[2], buy[3]);
-                    buy.x *= adjustx;
-                    buy.y *= adjusty;
-                    buy.width *= adjustx;
-                    buy.height *= adjusty;
+		var games:Array<Dynamic> = Reflect.getProperty(json, Settings.VENDOR);
 
-                    hitoverlays[f + "_free"] = free;
-                    hitoverlays[f + "_buy"] = buy;
-                }
-            }
+		for (gdata in games) {
 
-            GAMES = new Array<CrossPromotion>();
+			// note:  at puzzleboss we patch together our promotions with various
+			// overlays and dynamically generated logos and stuff, this ensures
+			// the test json (ours) will still be okay
+			if (!Reflect.hasField(gdata, "imageurl")) {
+				continue;
+			}
 
-            for(gdata in games)
-            {
-                var cp = new CrossPromotion();
-                cp.name = Reflect.getProperty(gdata, "name");
-                cp.shortname = Reflect.getProperty(gdata, "shortname");
+			var cp = new CrossPromotion();
+			cp.pkg = Reflect.getProperty(gdata, "package");
+			cp.imageurl = Reflect.hasField(gdata, "imageurl") ? Reflect.getProperty(gdata, "imageurl") : null;
+			cp.ean = Reflect.hasField(gdata, "ean") ? Reflect.getProperty(gdata, "ean") : null;
+			_games.push(cp);
+		}
 
-                #if nook
-                cp.ean = Reflect.getProperty(gdata, "ean");
-                #end
+		ready = true;
+	}
 
-                cp.pkg = Reflect.getProperty(gdata, "package");
-                cp.comp = Reflect.hasField(gdata, "comp") ? Reflect.getProperty(gdata, "comp") : false;
-                cp.free = Reflect.hasField(gdata, "free") ? Reflect.getProperty(gdata, "free") : false;
-                cp.overlay = Reflect.hasField(gdata, "overlay") ? Reflect.getProperty(gdata, "overlay") : null;
-                cp.imageurl = Reflect.hasField(gdata, "imageurl") ? Reflect.getProperty(gdata, "imageurl") : null;
-                
-                if(hitoverlays != null)
-                {
-                    cp.hitarea = hitoverlays[cp.overlay + (cp.free ? "_free" : "_buy")];
-                }
+	public static function getGames(num:Int):Array<CrossPromotion> {
+		if (_games == null || _games.length == 0) {
+			return null;
+		}
 
-                if(cp.imageurl != null)
-                {
-                    GAMES.push(cp);
-                }
-            }
+		var results:Array<CrossPromotion> = [];
 
-            READY = true;
-        }
+		ArraySort.sort(_games, function(a:CrossPromotion, b:CrossPromotion):Int {
+			return Math.random() < 0.5 ? -1 : 1;
+		});
 
-        #if !flash
-        if(FileSystem.exists(cachefile))
-        {
-            var cached = File.getContent(cachefile);
-            var json = haxe.Json.parse(cached);
-            var cdate = json.cached;
-            var cnow = Timer.stamp();
+		for(game in _games) {
+			results.push(game);
 
-            // cache for 3 days
-            var diff = cnow - cdate;
+			if (results.length == num) {
+				return results;
+			}
+		}
 
-            if(diff < 3 * 24 * 60 * 60)
-            {
-                loader.data = cached;
-                complete(null);
-                return;
-            }
-            else
-            {
-                FileSystem.deleteFile(cachefile);
-            }
-        }
-        #end
-
-        loader.addEventListener("diskError", ignore);
-        loader.addEventListener("ioError", ignore);
-        loader.addEventListener("networkError", ignore);
-        loader.addEventListener("verifyError", ignore);
-        loader.addEventListener("networkError", ignore);
-        loader.addEventListener("verifyError", ignore);
-        loader.addEventListener("securityError", ignore);
-        loader.addEventListener("uncaughtError", ignore);
-        loader.addEventListener("httpStatus", ignore);
-        loader.addEventListener("complete", complete);
-        loader.addEventListener("progress", progress);
-
-        try
-        {
-            loader.load(new URLRequest(url));
-        }
-        catch(s:String)
-        {
-        }
-    }
-
-    private static function ignore(e:Event)
-    {
-    }
-
-    private static function progress(e:ProgressEvent)
-    {
-    }
-
-    public static function getGames(num:Int):Array<CrossPromotion>
-    {
-        if(GAMES == null || GAMES.length == 0)
-        {
-            return null;
-        }
-
-        var results = new Array<CrossPromotion>();
-
-        ArraySort.sort(GAMES, function(a:CrossPromotion, b:CrossPromotion):Int {
-            return Math.random() < 0.5 ? -1 : 1;
-        });
-
-        for(game in GAMES)
-        {
-            results.push(game);
-
-            if(results.length == num)
-            {
-                return results;
-            }
-        }
-
-        return results;
-    }
+		return results;
+	}
 }
 #end

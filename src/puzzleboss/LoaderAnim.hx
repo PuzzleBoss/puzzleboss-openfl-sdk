@@ -5,40 +5,36 @@ import flash.display.Bitmap;
 import flash.events.Event;
 import openfl.Assets;
 
-class LoaderAnim extends Sprite
-{
-    private var bmp:Bitmap;
+class LoaderAnim extends Sprite {
 
-    public function new()
-    {
-        super();
-        addEventListener(Event.ADDED_TO_STAGE, init);
-        addEventListener(Event.REMOVED_FROM_STAGE, dispose);
-    }
+	private var _bmp:Bitmap;
 
-    private function init(e:Event):Void
-    {
-        removeEventListener(Event.ADDED_TO_STAGE, init);
+	public function new() {
+		super();
+		addEventListener(Event.ADDED_TO_STAGE, _onInit);
+		addEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
+	}
 
-        bmp = new Bitmap();
-        bmp.bitmapData = Assets.getBitmapData("images/loader.png");
-        bmp.x = -(bmp.width / 2);
-        bmp.y = -(bmp.height / 2);
-        addChild(bmp);
+	private function _onInit(e:Event) {
+		removeEventListener(Event.ADDED_TO_STAGE, _onInit);
 
-        addEventListener(Event.ENTER_FRAME, tick);
-    }
+		_bmp = new Bitmap();
+		addChild(_bmp);
+		Images.attach("loader", _bmp);
+		_bmp.x = -(_bmp.width / 2);
+		_bmp.y = -(_bmp.height / 2);
 
-    private function tick(e:Event):Void
-    {
-        rotation++;
-    }
+		addEventListener(Event.ENTER_FRAME, _onTick);
+	}
 
-    private function dispose(e:Event):Void
-    {
-        removeEventListener(Event.ADDED_TO_STAGE, init);
-        removeEventListener(Event.REMOVED_FROM_STAGE, dispose);
-        removeEventListener(Event.ENTER_FRAME, tick);
-        bmp.bitmapData = null;
-    }
+	private function _onTick(e:Event) {
+		rotation++;
+	}
+
+	private function _onDispose(e:Event) {
+		removeEventListener(Event.ADDED_TO_STAGE, _onInit);
+		removeEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
+		removeEventListener(Event.ENTER_FRAME, _onTick);
+		_bmp.bitmapData = null;
+	}
 }

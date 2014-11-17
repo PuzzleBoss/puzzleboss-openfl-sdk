@@ -14,7 +14,7 @@ class ImageButton extends Sprite
 {
 	public var upimg:Bitmap;
 	public var overimg:Bitmap;
-	public var onclick:Event->Void;
+	public var _onClick:Event->Void;
 
 	public function new(pup:String, pover:String, ponclick:Event->Void) {
 		super();
@@ -24,14 +24,14 @@ class ImageButton extends Sprite
 		useHandCursor = true;
 		buttonMode = true;
 
-		if(pup != null) {
+		if (pup != null) {
 			upimg = new Bitmap();
 			Images.loadBitmap(pup, upimg);
 			upimg.smoothing = true;
 			addChild(upimg);
 		}
 
-		if(pover != null) {
+		if (pover != null) {
 			overimg = new Bitmap();
 			Images.loadBitmap(pover, overimg);
 			overimg.visible = false;
@@ -39,23 +39,23 @@ class ImageButton extends Sprite
 			addChild(overimg);
 		}
 
-		Events.addUp(this, click, true);
-		Events.addDown(this, over);
-		addEventListener(Event.REMOVED_FROM_STAGE, dispose, false);
+		Events.addUp(this, _onClick, true);
+		Events.addDown(this, _onOver);
+		addEventListener(Event.REMOVED_FROM_STAGE, _onDispose, false);
 	}
 
-	private function over(e:Event):Void {
-		if(upimg == null) {
+	private function _onOver(e:Event) {
+		if (upimg == null) {
 			return;
 		}
 
 		upimg.visible = false;
 		overimg.visible = true;
-		Events.addUp(Lib.current.stage, out, false);
+		Events.addUp(Lib.current.stage, _onOut, false);
 	}
 
-	private function out(e:Event):Void {
-		if(upimg == null) {
+	private function _onOut(e:Event) {
+		if (upimg == null) {
 			return;
 		}
 
@@ -64,17 +64,12 @@ class ImageButton extends Sprite
 		Events.removeUp(Lib.current.stage, out, false);
 	}
 
-	private function click(e:Event):Void {
-		onclick(e);
-	}
-
-	private function dispose(e:Event):Void {
-		removeEventListener(Event.REMOVED_FROM_STAGE, dispose);
-		Events.removeUp(this, click, true);
-		Events.removeOver(this, over);
-		Events.removeOut(this, out);
-		Events.removeDown(this, over);
+	private function _onDispose(e:Event) {
+		removeEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
+		Events.removeUp(this, _onClick, true);
+		Events.removeOut(this, _onOut);
+		Events.removeDown(this, _onOver);
 		Events.removeUp(Lib.current.stage, out, false);
-		onclick = null;
+		_onClick = null;
 	}
 }

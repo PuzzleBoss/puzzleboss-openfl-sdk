@@ -1,55 +1,49 @@
 package puzzleboss;
 
-import flash.net.SharedObject;
 import googleAnalytics.Page;
 import googleAnalytics.Visitor;
 import googleAnalytics.Session;
 import googleAnalytics.Tracker;
-import googleAnalytics.Event;
-import googleAnalytics.CustomVariable;
-
-#if (!html5 && !flash)
-import sys.io.File;
-import sys.io.FileOutput;
-import sys.io.FileInput;
-import sys.FileSystem;
-#end
 
 class Analytics {
 
-    private static var visitor:Visitor;
-    private static var session:Session;
-    private static var tracker:Tracker;
+	private static var _visitor:googleAnalytics.Visitor;
+	private static var _session:googleAnalytics.Session;
+	private static var _tracker:googleAnalytics.Tracker;
 
-    /**
-     * initialize prepares the analytics package with your tracking
-     * code and player id
-     */
-    public static function initialize():Void {
+	/**
+	* initialize prepares the analytics package with your tracking
+	* code and player id
+	*/
+	public static function initialize() {
 
-        visitor = new Visitor();
-        session = new Session();
-        tracker = new Tracker("UA-42445367-2", "puzzleboss.com");
-    }
+		// NB: you can add details to these two vars for the person
+		// as a whole and their individual sessions within your app
+		_visitor = new Visitor();
+		_session = new Session();
 
-    /**
-     * track will send a pageview to google analytics prefixed with
-     * your 'action'.  It will append the information from your Settings.hx
-     * to the url so you can segregate based on version, appstore etc.
-     *
-     * @param action your action, eg '/opened'
-     */
-    public static function track(action:String):Void {
-        if(tracker == null) {
-            return;
-        }
+		_tracker = new Tracker("UA-42445367-2", "puzzleboss.com");
+	}
 
-        action = "/" + action + "/";
-        action = StringTools.replace(action, "//", "/");
+	/**
+	* track will send a pageview to google analytics prefixed with
+	* your 'action'.  It will append the information from your Settings.hx
+	* to the url so you can segregate based on version, appstore etc.
+	*
+	* @param action your action, eg '/opened'
+	*/
+	public static function track(action:String) {
 
-        var page = new Page(action + Settings.TYPE + "/" + Settings.PACKAGE + "/" + Settings.VENDOR + "/" + Settings.VERSION);
-        page.setTitle(Settings.PACKAGE + " (" + Settings.VENDOR + " v" + Settings.VERSION + ")");
+		if (_tracker == null) {
+			initialize();
+		}
 
-        tracker.trackPageview(page, session, visitor);
-    }
+		action = StringTools.replace("/" + action + "/", "//", "/");
+		action += Settings.TYPE + "/";
+		action += Settings.PACKAGE + "/";
+		action += Settings.VENDOR + "/";
+		action += Settings.VERSION;
+
+		_tracker.trackPageview(new Page(action), _session, _visitor);
+	}
 }

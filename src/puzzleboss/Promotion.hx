@@ -11,184 +11,126 @@ import flash.events.Event;
 import flash.net.URLRequest;
 import flash.Lib;
 
-class Promotion extends Sprite
-{
-    private var oncancel:Event->Void;
-    public var onclose:Event->Void;
-    private var image:Loader;
-    private var game:CrossPromotion;
-    private var _init:Bool = false;
+class Promotion extends Sprite {
 
-    private static function preload():Promotion {
-        var games = CrossPromotion.getGames(1);
+	public var _close:Event->Void;
+	private var _image:ImageLoader;
+	private var _game:CrossPromotion;
+	private var _init:Bool = false;
 
-        if(games == null || games.length == 0) {
-            return null;
-        }
+	private static function _preload():Promotion {
+		var games = CrossPromotion.getGames(1);
 
-        return new Promotion(games[0]);
-    }
+		if (games == null || games.length == 0) {
+			return null;
+		}
 
-    public static function create(ponclose:Event->Void):Promotion {
-        var promo = preload();
+		return new Promotion(games[0]);
+	}
 
-        if(promo == null) {
-            return null;
-        }
+	public static function create(pclose:Event->Void):Promotion {
+		var promo = _preload();
 
-        promo.oncancel = ponclose;
-        promo.onclose = ponclose;
-        return promo;
-    }
+		if (promo == null) {
+			return null;
+		}
 
-    public function new(pgame:CrossPromotion, ponclose:Event->Void = null) {
-        if(pgame == null) {
-            return;
-        }
+		promo._close = pclose;
+		return promo;
+	}
 
-        super();
-        game = pgame;
-        onclose = ponclose;
-        visible = false;
+	public function new(pgame:CrossPromotion, pclose:Event->Void = null) {
+		if (pgame == null) {
+			return;
+		}
 
-        image = new Loader();
-        image.contentLoaderInfo.addEventListener("progress", ignore);
-        image.contentLoaderInfo.addEventListener("diskError", cancelImage);
-        image.contentLoaderInfo.addEventListener("ioError", cancelImage);
-        image.contentLoaderInfo.addEventListener("networkError", cancelImage);
-        image.contentLoaderInfo.addEventListener("verifyError", cancelImage);
-        image.contentLoaderInfo.addEventListener("networkError", cancelImage);
-        image.contentLoaderInfo.addEventListener("verifyError", cancelImage);
-        image.contentLoaderInfo.addEventListener("securityError", cancelImage);
-        image.contentLoaderInfo.addEventListener("uncaughtError", cancelImage);
-        image.contentLoaderInfo.addEventListener("httpStatus", ignore);
-        image.contentLoaderInfo.addEventListener("complete", setImage);
-        image.load(new URLRequest(game.imageurl));
-        addChild(image);
+		super();
+		_game = pgame;
+		_close = pclose;
 
-        var closebutton = new IconButton("icon_close", close);
-        addChild(closebutton);
-        closebutton.x = Images.WIDTH - closebutton.width - 20;
-        closebutton.y = 20;
+		_image = new ImageLoader(_setImage, _cancelImage);
+		_image.load(new URLRequest(_game.imageurl));
+		addChild(_image);
 
-        addEventListener(Event.ADDED_TO_STAGE, init);
-        addEventListener(Event.REMOVED_FROM_STAGE, dispose);
-    }
+		var closebutton = new IconButton("icon_close", close);
+		addChild(closebutton);
+		closebutton.x = Images.width - closebutton.width - 20;
+		closebutton.y = 20;
 
-    private function init(e:Event):Void {
-        removeEventListener(Event.ADDED_TO_STAGE, init);
-        Events.addUp(Lib.current.stage, open, true);
-    }
+		addEventListener(Event.ADDED_TO_STAGE, _onInit);
+		addEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
+	}
 
-    private function cancelImage(e:Event):Void {
-        if(image == null) {
-            return;
-        }
+	private function _onInit(e:Event) {
+		removeEventListener(Event.ADDED_TO_STAGE, _onInit);
+		Events.addUp(Lib.current.stage, _onOpen, true);
+	}
 
-        image.contentLoaderInfo.removeEventListener("progress", ignore);
-        image.contentLoaderInfo.removeEventListener("diskError", cancelImage);
-        image.contentLoaderInfo.removeEventListener("ioError", cancelImage);
-        image.contentLoaderInfo.removeEventListener("networkError", cancelImage);
-        image.contentLoaderInfo.removeEventListener("verifyError", cancelImage);
-        image.contentLoaderInfo.removeEventListener("networkError", cancelImage);
-        image.contentLoaderInfo.removeEventListener("verifyError", cancelImage);
-        image.contentLoaderInfo.removeEventListener("securityError", cancelImage);
-        image.contentLoaderInfo.removeEventListener("uncaughtError", cancelImage);
-        image.contentLoaderInfo.removeEventListener("httpStatus", ignore);
-        image.contentLoaderInfo.removeEventListener("complete", setImage);
-        image = null;
-    }
+	private function _cancelImage(e:Event) {
+		_image = null;
+	}
 
-    private function ignore(e:Event):Void {
-        if(parent == null) {
-            dispose(e);
-            return;
-        }
-    }
+	private function _setImage(e:Event) {
 
-    private function setImage(e:Event):Void {
-        if(image == null || image.content == null) {
-            cancelPromotion();
-            return;
-        }
+		// if the _image has loadaed after we disposed of this
+		if (_image == null || _image.content == null || parent == null) {
+			_cancelPromotion();
+			return;
+		}
 
-        if(parent == null) {
-            dispose(e);
-            return;
-        }
+		_image.width = Images.width;
+		_image.height = Images.height;
+	}
 
-        image.width = Images.WIDTH;
-        image.height = Images.HEIGHT;
-        ready();
-    }
+	private function _cancelPromotion(e:Event=null) {
+		_cancelImage(null);
+		close();
+	}
 
-    private function cancelPromotion():Void {
-        cancelImage(null);
+	public function close(e:Event = null) {
+		if (_close != null) {
+			_close(null);
+			_close = null;
+		}
 
-        if(oncancel != null)
-        {
-            oncancel(null);
-            oncancel = null;
-        }
+		if (parent != null) {
+			parent.removeChild(this);
+		}
 
-        close();
-    }
+		_onDispose(e);
+	}
 
-    private function ready():Void {
-        visible = true;
-    }
+	private function _onOpen(e:Event) {
+		if (parent == null) {
+			return;
+		}
 
-    public function close(e:Event = null):Void {
-        if(onclose != null) {
-            onclose(null);
-            onclose = null;
-        }
+		var sx:Float = Reflect.getProperty(e, "stageX");
+		var sy:Float = Reflect.getProperty(e, "stageY");
 
-        oncancel = null;
+		// close if we hit the top right 20% corner
+		if (sx > Images.width * 0.8 && sy < Images.height * 0.2) {
+			close(e);
+			return;
+		}
 
-        if(parent != null) {
-            parent.removeChild(this);
-        }
+		// no _game
+		if (_game == null) {
+			return;
+		}
 
-        dispose(e);
-    }
+		Analytics.track("/Promotion/open/" + _game.pkg);
+		AppLink.open(_game.pkg, _game.ean);
+	}
 
-    private function open(e:Event):Void {
-        if(!visible || parent == null) {
-            return;
-        }
-
-        var sx:Float = Reflect.getProperty(e, "stageX");
-        var sy:Float = Reflect.getProperty(e, "stageY");
-
-        // close if we hit the top right 20% corner
-        if(sx > Images.WIDTH * 0.8 && sy < Images.HEIGHT * 0.2) {
-            close(e);
-            return;
-        }
-
-        if(game == null) {
-            return;
-        }
-
-        if(game.hitarea != null && !game.hitarea.containsPoint(new Point(sx, sy))) {
-            return;
-        }
-
-        Analytics.track("/Promotion/open/" + game.pkg);
-        AppLink.open(game.shortname, game.ean);
-    }
-
-    public function dispose(e:Event):Void {
-        removeEventListener(Event.REMOVED_FROM_STAGE, dispose);
-        removeEventListener(Event.ADDED_TO_STAGE, init);
-        Events.removeUp(Lib.current.stage, open, true);
-        cancelImage(e);
-        image = null;
-        oncancel = null;
-        onclose = null;
-        game = null;
-    }
+	public function _onDispose(e:Event) {
+		removeEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
+		removeEventListener(Event.ADDED_TO_STAGE, _onInit);
+		Events.removeUp(Lib.current.stage, _onOpen, true);
+		_image = null;
+		_close = null;
+		_game = null;
+	}
 }
 
 #end
