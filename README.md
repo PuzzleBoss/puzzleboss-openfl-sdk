@@ -25,6 +25,7 @@ Parts of it (such as the Pinterest SDK) carry their own licenses.
 	<assets path="fonts" rename="fonts" include="DroidSansBold.ttf" if="android" />
 	<haxelib name="haxe-ga" if="android" />
 	<haxelib name="actuate" if="android" />
+	<haxeflag name="-D nook" if="never" /> <!-- to activate nook store linking -->
 
 2.  In your [AndroidManifest.xml](http://labe.me/en/blog/posts/2013-06-28-OpenFL-AndroidManifest.xml-and-greater-Android-SDK-version.html#.Uovh58SfhKc) you need to include these permissions:
 

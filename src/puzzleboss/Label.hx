@@ -1,5 +1,30 @@
-package puzzleboss;
+/*
+PuzzleBoss APIs and SDKs are licensed under the MIT license.  Certain
+portions may come from 3rd parties and carry their own licensing
+terms and are referenced where applicable.
 
+https://github.com/puzzleboss/puzzleboss-openfl-sdk
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+*/
+
+package puzzleboss;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
@@ -15,21 +40,13 @@ import flash.geom.Rectangle;
 import flash.utils.ByteArray;
 import openfl.Assets;
 
-/**
-* ...
-* @author Ben Lowry
-*/
-
-
-class Label extends Sprite
-{
+class Label extends Sprite {
 	private static var _cache:Map<String, BitmapData> = null;
 	private static var _fontName:String = null;
 	public var text:String;
 	public var textfield:TextField;
 
-	public function centerVertically(parentheight:Float)
-	{
+	public function centerVertically(parentheight:Float) {
 		#if html5
 		y = Math.floor((parentheight - height) / 2);
 		#else
@@ -38,8 +55,7 @@ class Label extends Sprite
 	}
 
 	public function new(ptext:String = "", psize:Int=20, center:Bool=false, ptype:String=null, color:Int = -1,
-	forcewidth:Int = 1, pmultiline:Bool = false)
-	{
+	forcewidth:Int = 1, pmultiline:Bool = false) {
 		super();
 
 		if (_cache == null) {
@@ -96,8 +112,8 @@ class Label extends Sprite
 
 	private function _createTextField(ptext:String = "", psize:Int=20, center:Bool=false,
 	pautosize:String=null, ptype:String=null, color:Int = -1,
-	forcewidth:Int = 1, pmultiline:Bool = false, attachbitmap:Bool = true):TextField
-	{
+	forcewidth:Int = 1, pmultiline:Bool = false, attachbitmap:Bool = true):TextField {
+
 		var tf = new TextFormat(_fontName);
 		tf.color = color;
 		tf.align = center ? TextFormatAlign.CENTER : TextFormatAlign.LEFT;
