@@ -20,6 +20,7 @@ Parts of it (such as the Pinterest SDK) carry their own licenses.
 	<template path="java/Support.java" rename="src/com/puzzleboss/core/Support.java" if="android" />
 	<template path="java/NookStore.java" rename="src/com/puzzleboss/core/NookStore.java" if="android" />
 	<template path="java/Path.java" rename="src/com/puzzleboss/core/Path.java" if="android" />
+	<template path="java/ExitApp.java" rename="src/com/puzzleboss/core/ExitApp.java" if="android" />
 	<assets path="images" rename="images" type="image" if="android" />
 	<assets path="fonts" rename="fonts" include="DroidSansBold.ttf" if="android" />
 	<haxelib name="haxe-ga" if="android" />
@@ -36,12 +37,10 @@ Parts of it (such as the Pinterest SDK) carry their own licenses.
 
 4.  Create a 'share' image for your game when it is shared on eg Pinterest and upload it somewhere
 
-5.  Initialize some stuff:
+5.  Initialize classes if necessary
 
-	CrossPromotion.intialize(); // if you use it
-
-	Images.initialize()
-
+	CrossPromotion.intialize();
+	Images.initialize();
 	Analytics.initialize();
 
 ## Analytics
@@ -53,6 +52,12 @@ anything you wish to know you call `Analytics.track` with whatever information s
 The path will prepend information from your Settings.hx file in the format:
 
 	*action*/Settings.TYPE/Settings.PACKAGE/Settings.VENDOR/Settings.VERSION
+
+## App exiting
+
+	AppExit.enable(); // listen for back press
+	AppExit.disable(); // stop listening
+	AppExit.exit(); // exit yourself
 
 ## App links
 When you are linking to an app the AppLink class will help ensure the right structure is
