@@ -34,11 +34,11 @@ In your [AndroidManifest.xml](http://labe.me/en/blog/posts/2013-06-28-OpenFL-And
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-Enter your game information in the Settings.hx file, this information is used in the analytics requests.
+Enter your game information in the Settings.hx file, this information is used in the analytics requests and as the default info for using the AppLink class to open whatever appstore. 
 
 Create a 'share' image for your game when it is shared on eg Pinterest and upload it somewhere
 
-Initialize classes if necessary
+Initialize classes
 
     CrossPromotion.intialize();
     Images.initialize();
@@ -52,7 +52,7 @@ anything you wish to know you call `Analytics.track` with whatever information s
 
 The path will prepend information from your Settings.hx file in the format:
 
-	*action*/Settings.TYPE/Settings.PACKAGE/Settings.VENDOR/Settings.VERSION
+	/*action*/Settings.TYPE/Settings.PACKAGE/Settings.VENDOR/Settings.VERSION
 
 ## App exiting
 
@@ -66,15 +66,15 @@ used to open the appstore and record the event in the Analytics.
 
 To open your game in the appstore:
 
-	AppLink.open();
+    AppLink.open(); // uses Settings.hx info
 
 To open any game in the appstore:
 
-	AppLink.open("the_package_name");
+    AppLink.open("the_package_name"); // for any game
 
 To open any game in the appstore including the NOOK store:
 
-	AppLink.open("the_package_name", "the_ean");
+    AppLink.open("the_package_name", "the_ean"); // for any game on the NOOK store
 
 ## Rating prompt
 The rating prompt provides players with a dialogue asking them to rate the game.  It is best
@@ -126,10 +126,10 @@ create a `new Support(my_close_method);` and add it to your display.
 Your close method takes one parameter, an Event, and will need to remove the support and then do whatever
 follows in your game, eg:
 
-	private function closeSupport(e:Event):Void {
-		removeChild(support);
-		// then go to the homescreen or whatever
-	}
+    private function closeSupport(e:Event):Void {
+        removeChild(support);
+        // then go to the homescreen or whatever
+    }
 
 ## Cross promotion
 The crosspromotion downloads JSON advertisements for games in the puzzleboss catalog.  It can be used in
@@ -138,28 +138,28 @@ create a single Promotion that can be shown at any point like an interstitial ad
 
 To create a "More games" screen:
 
-	if (MoreGames.create(parent, my_close_method)) {
-		// enjoy
-	} else {
-		// crosspromotions aren't ready yet
-	}
+    if (MoreGames.create(parent, my_close_method)) {
+        // enjoy
+    } else {
+        // crosspromotions aren't ready yet
+    }
 
 To create a single Promotion:
 
-	if(Promotion.create(parent, my_close_method)) {
-		// enjoy
-	} else {
-		// not ready
-	}
+    if(Promotion.create(parent, my_close_method)) {
+        // enjoy
+    } else {
+        // not ready
+    }
 
 If you are going to use your own JSON you will need to modify CrossPromotion.hx to fetch it from your URL,
 and the expected format is:
 
-	{
-		"amazon": [
-				{ "package": "com.hunter_hamster.SnailBob", "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }
-		],
-		"google": [
-				{ "package": "com.hunter_hamster.SnailBob", "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }
-		]
-	}
+    {
+        "amazon": [{ "package": "com.hunter_hamster.SnailBob", 
+                "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }],
+        "google": [{ "package": "com.hunter_hamster.SnailBob", 
+                "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }],
+        "nook": [{ "ean": "1234567890", "package": "com.hunter_hamster.SnailBob", 
+                "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }]
+    }
