@@ -13,7 +13,7 @@ Parts of it (such as the Pinterest SDK) carry their own licenses.
 
 ## Setting up your project
 
-You need to embed the images, font and java in your project.xml.  Exact paths may vary.
+1.  Embed the images, font and java in your project.xml.  Exact paths may vary.
 
 	<java path="java/pinit-sdk-1.0.jar" if="android" />
 	<template path="java/Social.java" rename="src/com/puzzleboss/core/Social.java" if="android" />
@@ -25,19 +25,22 @@ You need to embed the images, font and java in your project.xml.  Exact paths ma
 	<haxelib name="haxe-ga" if="android" />
 	<haxelib name="actuate" if="android" />
 
-In your [AndroidManifest.xml](http://labe.me/en/blog/posts/2013-06-28-OpenFL-AndroidManifest.xml-and-greater-Android-SDK-version.html#.Uovh58SfhKc) you need to include these permissions:
+2.  In your [AndroidManifest.xml](http://labe.me/en/blog/posts/2013-06-28-OpenFL-AndroidManifest.xml-and-greater-Android-SDK-version.html#.Uovh58SfhKc) you need to include these permissions:
 
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.STORAGE" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-You also need to enter your game information in the Settings.hx file, this information is
-used in the analytics requests.
+3.  Enter your game information in the Settings.hx file, this information is used in the analytics requests.
 
-You also need to create a 'share' image for your game when it is shared on eg Pinterest.
+4.  Create a 'share' image for your game when it is shared on eg Pinterest and upload it somewhere
 
-You also need to `Images.initialize();` and `Analytics.initialize();` to get things ready.
+5.  Initialize some stuff:
+
+	CrossPromotion.intialize(); // if you use it
+	Images.initialize();
+	Analytics.initialize();
 
 ## Analytics
 You will need to install "haxe-ga" which is Google Analytics via `haxelib install haxe-ga`.  To log
