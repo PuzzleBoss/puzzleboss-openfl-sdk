@@ -148,4 +148,3 @@ class CrossPromotion {
 		return results;
 	}
 }
-#end

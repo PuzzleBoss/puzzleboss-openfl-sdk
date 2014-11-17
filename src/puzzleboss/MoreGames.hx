@@ -43,6 +43,16 @@ class MoreGames extends Sprite {
 	private var next:Sprite;
 	private var onclose:Event->Void;
 
+	public static function create(parent:Sprite, ponclose:Event->Void):Bool {
+
+		if(CrossPromotion.ready) {
+			parent.addChild(new MoreGames(ponclose));
+			return true;
+		}
+
+		return false;
+	}
+
 	public function new(ponclose:Event->Void) {
 		super();
 		scrollRect = new Rectangle(0, 0, Images.width, Images.height);

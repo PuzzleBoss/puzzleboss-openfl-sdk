@@ -82,7 +82,7 @@ used after a positive moment like a win where there is a natural pause + good wi
 activate the prompt just call something like:
 
 	if(wins == 1) {
-		if(Rating.prompt(parent_display_object)) {
+		if(Rating.create(parent_display_object, my_close_method)) {
 			// we have a prompt now
 		} else {
 			// continue doing something else
@@ -136,9 +136,21 @@ The crosspromotion downloads JSON advertisements for games in the puzzleboss cat
 two ways, via the "More games" which is a full-screen and allows multiple Promotion's to be browsed, or to
 create a single Promotion that can be shown at any point like an interstitial ad.
 
-To create a "More games" screen, as with Support, `new MoreGames(my_close_method);`
+To create a "More games" screen:
 
-To create a single Promotion, `Promotion.create(my_close_method);`
+	if (MoreGames.create(parent, my_close_method)) {
+		// enjoy
+	} else {
+		// crosspromotions aren't ready yet
+	}
+
+To create a single Promotion:
+
+	if(Promotion.create(parent, my_close_method)) {
+		// enjoy
+	} else {
+		// not ready
+	}
 
 If you are going to use your own JSON you will need to modify CrossPromotion.hx to fetch it from your URL,
 and the expected format is:

@@ -31,7 +31,9 @@ import flash.net.SharedObject;
 
 class Rating extends Sprite {
 
-	public static function prompt(parent:Sprite):Bool {
+	private var _onClose:Event->Void;
+
+	public static function create(parent:Sprite, ponclose:Event->Void):Bool {
 		#if (flash || html5 || mac)
 		return false;
 		#end
@@ -42,12 +44,13 @@ class Rating extends Sprite {
 			return false;
 		}
 
-		parent.addChild(new Rating());
+		parent.addChild(new Rating(ponclose));
 		return true;
 	}
 
-	public function new() {
+	public function new(ponclose:Event->Void) {
 		super();
+		_onClose = ponclose;
 		addEventListener(Event.ADDED_TO_STAGE, _onInit);
 		addEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
 	}
@@ -116,11 +119,12 @@ class Rating extends Sprite {
 	}
 
 	private function _close(e:Event) {
-		parent.removeChild(this);
+		_onClose(e);
 	}
 
 	private function _onDispose(e:Event) {
 		removeEventListener(Event.ADDED_TO_STAGE, _onInit);
 		removeEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
+		_onClose = null;
 	}
 }
