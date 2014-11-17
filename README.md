@@ -13,36 +13,36 @@ Parts of it (such as the Pinterest SDK) carry their own licenses.
 
 ## Setting up your project
 
-1.  Embed the images, font and java in your project.xml:
+Embed the images, font and java in your project.xml
 
-	<java path="java/pinit-sdk-1.0.jar" if="android" />
-	<template path="java/Social.java" rename="src/com/puzzleboss/core/Social.java" if="android" />
-	<template path="java/Support.java" rename="src/com/puzzleboss/core/Support.java" if="android" />
-	<template path="java/NookStore.java" rename="src/com/puzzleboss/core/NookStore.java" if="android" />
-	<template path="java/Path.java" rename="src/com/puzzleboss/core/Path.java" if="android" />
-	<template path="java/ExitApp.java" rename="src/com/puzzleboss/core/ExitApp.java" if="android" />
-	<assets path="images" rename="images" type="image" if="android" />
-	<assets path="fonts" rename="fonts" include="DroidSansBold.ttf" if="android" />
-	<haxelib name="haxe-ga" if="android" />
-	<haxelib name="actuate" if="android" />
-	<haxeflag name="-D nook" if="change_to_android_for_nook_linking" />
+    <java path="java/pinit-sdk-1.0.jar" if="android" />
+    <template path="java/Social.java" rename="src/com/puzzleboss/core/Social.java" if="android" />
+    <template path="java/Support.java" rename="src/com/puzzleboss/core/Support.java" if="android" />
+    <template path="java/NookStore.java" rename="src/com/puzzleboss/core/NookStore.java" if="android" />
+    <template path="java/Path.java" rename="src/com/puzzleboss/core/Path.java" if="android" />
+    <template path="java/ExitApp.java" rename="src/com/puzzleboss/core/ExitApp.java" if="android" />
+    <assets path="images" rename="images" type="image" if="android" />
+    <assets path="fonts" rename="fonts" include="DroidSansBold.ttf" if="android" />
+    <haxelib name="haxe-ga" if="android" />
+    <haxelib name="actuate" if="android" />
+    <haxeflag name="-D nook" if="change_to_android_for_nook_linking" />
 
-2.  In your [AndroidManifest.xml](http://labe.me/en/blog/posts/2013-06-28-OpenFL-AndroidManifest.xml-and-greater-Android-SDK-version.html#.Uovh58SfhKc) you need to include these permissions:
+In your [AndroidManifest.xml](http://labe.me/en/blog/posts/2013-06-28-OpenFL-AndroidManifest.xml-and-greater-Android-SDK-version.html#.Uovh58SfhKc) you need to include these permissions
 
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.STORAGE" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-3.  Enter your game information in the Settings.hx file, this information is used in the analytics requests.
+Enter your game information in the Settings.hx file, this information is used in the analytics requests.
 
-4.  Create a 'share' image for your game when it is shared on eg Pinterest and upload it somewhere
+Create a 'share' image for your game when it is shared on eg Pinterest and upload it somewhere
 
-5.  Initialize classes if necessary
+Initialize classes if necessary
 
-	CrossPromotion.intialize();
-	Images.initialize();
-	Analytics.initialize();
+    CrossPromotion.intialize();
+    Images.initialize();
+    Analytics.initialize();
 
 ## Analytics
 You will need to install "haxe-ga" which is Google Analytics via `haxelib install haxe-ga`.  To log
@@ -56,9 +56,9 @@ The path will prepend information from your Settings.hx file in the format:
 
 ## App exiting
 
-	AppExit.enable(); // listen for back press
-	AppExit.disable(); // stop listening
-	AppExit.exit(); // exit yourself
+    AppExit.enable(); // listen for back press
+    AppExit.disable(); // stop listening
+    AppExit.exit(); // exit yourself
 
 ## App links
 When you are linking to an app the AppLink class will help ensure the right structure is
