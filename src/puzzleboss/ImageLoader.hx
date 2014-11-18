@@ -31,6 +31,7 @@ import flash.events.Event;
 class ImageLoader extends Loader {
 	private var _complete:Event->Void;
 	private var _fail:Event->Void;
+	public var ready:Bool = false;
 
 	public function new(pcomplete:Event->Void, pfail:Event->Void) {
 		super();
@@ -55,6 +56,7 @@ class ImageLoader extends Loader {
 		}
 		_complete(e);
 		onDispose(e);
+		ready = true;
 	}
 
 	private function _onFail(e:Event) {

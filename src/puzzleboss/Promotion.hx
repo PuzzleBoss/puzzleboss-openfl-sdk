@@ -120,7 +120,7 @@ class Promotion extends Sprite {
 	}
 
 	private function _onOpen(e:Event) {
-		if (parent == null) {
+		if (parent == null || (_image == null || !_image.ready)) {
 			return;
 		}
 
