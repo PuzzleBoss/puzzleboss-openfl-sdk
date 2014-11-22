@@ -118,6 +118,11 @@ class CrossPromotion {
 
 			var cp = new CrossPromotion();
 			cp.pkg = Reflect.getProperty(gdata, "package");
+
+			if(cp.pkg == Settings.PACKAGE) {
+				continue;
+			}
+			
 			cp.imageurl = Reflect.hasField(gdata, "imageurl") ? Reflect.getProperty(gdata, "imageurl") : null;
 			cp.ean = Reflect.hasField(gdata, "ean") ? Reflect.getProperty(gdata, "ean") : null;
 			_games.push(cp);
