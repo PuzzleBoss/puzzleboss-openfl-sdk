@@ -33,19 +33,20 @@ class Rating extends Sprite {
 
 	private var _onClose:Event->Void;
 
-	public static function create(parent:Sprite, ponclose:Event->Void):Bool {
+	public static function create(parent:Sprite, ponclose:Event->Void):Rating {
 		#if (flash || html5 || mac)
-		return false;
+		return null;
 		#end
 
 		var so = SharedObject.getLocal("prompt");
 
 		if (Reflect.hasField(so.data, "noprompt")) {
-			return false;
+			return null;
 		}
 
-		parent.addChild(new Rating(ponclose));
-		return true;
+		var r = new Rating(ponclose);
+		parent.addChild(r);
+		return r;
 	}
 
 	public function new(ponclose:Event->Void) {
@@ -68,54 +69,53 @@ class Rating extends Sprite {
 
 		var bar = new Sprite();
 		bar.graphics.beginFill(0x000000, 0.5);
-		bar.graphics.drawRect(0, 0, Images.width, 160);
+		bar.graphics.drawRect(0, 0, Images.width, 200);
 		bar.graphics.endFill();
 		bar.x = 0;
 		bar.y = 0;
 		addChild(bar);
 
+		var container = new Sprite();
+		addChild(container);
+
 		var label = new Label("Rate this game", 20, false, null, 0xFFFFFF);
-		addChild(label);
+		container.addChild(label);
 
-		var message = new Label("Ratings are really important and help us build our company!", 14);
-		addChild(message);
-
-		label.y = Math.floor((Images.height - label.height - 200) / 2);
-		bar.y = label.y - 20;
-		message.y = label.y + label.height + 10;
+		var message = new Label("If you're enjoying this app please leave us a rating!", 14);
+		message.y = label.height + (20 * Images.scaleY);
+		container.addChild(message);
 
 		var buttons = new Sprite();
-		addChild(buttons);
+		buttons.y = message.y + message.height + (20 * Images.scaleY);
+		container.addChild(buttons);
 
 		var updatebutton = new TextButton("Rate", _rate);
 		buttons.addChild(updatebutton);
 
 		var closebutton = new TextButton("No thanks", _close);
-		closebutton.x = updatebutton.x + updatebutton.width + 50;
+		closebutton.x = updatebutton.x + updatebutton.width + (20 * Images.scaleY);
 		buttons.addChild(closebutton);
 
 		var neverbutton = new TextButton("Never", _never);
-		neverbutton.x = closebutton.x + closebutton.width + 50;
+		neverbutton.x = closebutton.x + closebutton.width + (20 * Images.scaleY);
 		buttons.addChild(neverbutton);
 
-		buttons.x = Math.floor((Images.width - buttons.width) / 2);
-		buttons.y = message.y + message.height + 50;
-
-		label.x = buttons.x;
-		message.x = buttons.x;
+		bar.height = container.height + (40 * Images.scaleY);
+		bar.y = Math.floor((Images.height - bar.height) / 2);
+		container.y = bar.y + (20 * Images.scaleY);
+		container.x = Math.floor((Images.width - container.width) / 2);
 	}
 
 	private function _rate(e:Event) {
 		AppLink.open(Settings.PACKAGE, Settings.EAN);
-		never(e);
+		_never(e);
 	}
 
 	private function _never(e:Event) {
 		var so = SharedObject.getLocal("prompt");
 		so.data.noprompt = "true";
 		so.flush();
-
-		close(e);
+		_close(e);
 	}
 
 	private function _close(e:Event) {

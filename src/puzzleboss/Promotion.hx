@@ -42,20 +42,21 @@ class Promotion extends Sprite {
 	private var _game:CrossPromotion;
 	private var _init:Bool = false;
 
-	public static function create(parent:Sprite, ponclose:Event->Void):Bool {
+	public static function create(parent:Sprite, ponclose:Event->Void):Promotion {
 		if (CrossPromotion.ready) {
 
 			var games = CrossPromotion.getGames(1);
 
 			if (games == null || games.length == 0) {
-				return false;
+				return null;
 			}
 
-			parent.addChild(new Promotion(games[0], ponclose));
-			return true;
+			var p = new Promotion(games[0], ponclose);
+			parent.addChild(p);
+			return p;
 		}
 
-		return false;
+		return null;
 	}
 
 	public function new(pgame:CrossPromotion, pclose:Event->Void = null) {

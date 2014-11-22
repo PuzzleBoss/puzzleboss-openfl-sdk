@@ -34,7 +34,7 @@ In your [AndroidManifest.xml](http://labe.me/en/blog/posts/2013-06-28-OpenFL-And
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-Enter your game information in the Settings.hx file, this information is used in the analytics requests and as the default info for using the AppLink class to open whatever appstore. 
+Enter your game information in the Settings.hx file, this information is used in the analytics requests and as the default info for using the AppLink class to open whatever appstore.
 
 Create a 'share' image for your game when it is shared on eg Pinterest and upload it somewhere
 
@@ -82,7 +82,8 @@ used after a positive moment like a win where there is a natural pause + good wi
 activate the prompt just call something like:
 
 	if(wins == 1) {
-		if(Rating.create(parent_display_object, my_close_method)) {
+        var r = Rating.create(parent_display_object, my_close_method);
+		if(r != null) {
 			// we have a prompt now
 		} else {
 			// continue doing something else
@@ -138,7 +139,9 @@ create a single Promotion that can be shown at any point like an interstitial ad
 
 To create a "More games" screen:
 
-    if (MoreGames.create(parent, my_close_method)) {
+    var m = MoreGames.create(parent, my_close_method);
+
+    if (m != null) {
         // enjoy
     } else {
         // crosspromotions aren't ready yet
@@ -146,7 +149,9 @@ To create a "More games" screen:
 
 To create a single Promotion:
 
-    if(Promotion.create(parent, my_close_method)) {
+    var p = Promotion.create(parent, my_close_method);
+
+    if(p != null) {
         // enjoy
     } else {
         // not ready
@@ -156,10 +161,10 @@ If you are going to use your own JSON you will need to modify CrossPromotion.hx 
 and the expected format is:
 
     {
-        "amazon": [{ "package": "com.hunter_hamster.SnailBob", 
+        "amazon": [{ "package": "com.hunter_hamster.SnailBob",
                 "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }],
-        "google": [{ "package": "com.hunter_hamster.SnailBob", 
+        "google": [{ "package": "com.hunter_hamster.SnailBob",
                 "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }],
-        "nook": [{ "ean": "1234567890", "package": "com.hunter_hamster.SnailBob", 
+        "nook": [{ "ean": "1234567890", "package": "com.hunter_hamster.SnailBob",
                 "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }]
     }
