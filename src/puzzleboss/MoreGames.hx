@@ -152,8 +152,7 @@ class MoreGames extends Sprite {
 		}
 
 		promo = new Promotion(promotions[index], close);
-		addChildAt(promo, 2);
-
+		addChild(promo);
 		setChildIndex(closeButton, numChildren - 1);
 		setChildIndex(next, numChildren - 1);
 		setChildIndex(prev, numChildren - 1);
