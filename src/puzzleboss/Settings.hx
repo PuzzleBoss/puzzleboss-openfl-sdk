@@ -37,7 +37,7 @@ class Settings {
 	public static inline var TYPE:String = "jigsaw";
 
 	// the marketplace the game's compiled for
-	public static inline var VENDOR:String = "amazon";
+	public static inline var APP_STORE:String = "amazon";
 
 	// your package name for the game
 	public static inline var PACKAGE:String = "com.puzzleboss.jigsaw.Amazing.amazon";

@@ -109,7 +109,7 @@ class CrossPromotion {
 
 	private static function _processData(json:Dynamic) {
 
-		var games:Array<Dynamic> = Reflect.getProperty(json, Settings.VENDOR);
+		var games:Array<Dynamic> = Reflect.getProperty(json, Settings.APP_STORE);
 
 		for (gdata in games) {
 

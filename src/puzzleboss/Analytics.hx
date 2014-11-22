@@ -66,7 +66,7 @@ class Analytics {
 		action = StringTools.replace("/" + action + "/", "//", "/");
 		action += Settings.TYPE + "/";
 		action += Settings.PACKAGE + "/";
-		action += Settings.VENDOR + "/";
+		action += Settings.APP_STORE + "/";
 		action += Settings.VERSION;
 
 		_tracker.trackPageview(new Page(action), _session, _visitor);
