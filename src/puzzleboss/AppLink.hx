@@ -53,31 +53,14 @@ class AppLink {
 		Lib.getURL(new URLRequest("http://puzzleboss.com/"), "_blank");
 	}
 
-	public static function open(pkg:String = "", ean:String = "", store:String = "") {
-		if (pkg == null || pkg == "") {
-			pkg = Settings.PACKAGE;
-		}
+	public static function link(url:String) {
+		Lib.getURL(new URLRequest(url), "_blank");
+	}
 
-		if (ean == null || ean == "") {
-			ean = Settings.EAN;
-		}
-
-		if (pkg.indexOf(".") == -1) {
-			pkg = "com.puzzleboss.jigsaw." + pkg;
-
-			#if (flash || html5)
-			pkg += "." + store;
-			#elseif amazon
-			pkg += ".amazon";
-			#elseif samsung
-			pkg += ".samsung";
-			#else
-			pkg += ".google";
-			#end
-		}
+	public static function nook(ean:String, url:String) {
 
 		#if nook
-		var nookstore = JNI.createStaticMethod(NOOK_JNI_PATH, NOOK_JNI_METHOD, NOOK_JNI_SIGNATURE);
+		var nookstore = openfl.utils.JNI.createStaticMethod("com/puzzleboss/core/NookStore", "openShop", "(Ljava/lang/String;)Ljava/lang/String;");
 
 		try {
 			nookstore(ean);
@@ -88,20 +71,51 @@ class AppLink {
 		return;
 		#end
 
-		var purl:String = null;
-
-		#if !android
-		purl = (store == "google" ? PLAY_STORE : AMAZON_STORE) + pkg;
-		#elseif amazon
-		purl = "amzn://apps/android?p=" + pkg;
-		#elseif google
-		purl = "market://details?id=" + pkg;
-		#elseif samsung
-		purl = "samsungapps://ProductDetail/" + pkg;
-		#end
-
-		if (purl != null) {
-			Lib.getURL(new URLRequest(purl));
+		if(url != null && url != "") {
+			Lib.getURL(new URLRequest(url));
 		}
 	}
+
+	public static function google(pkg:String) {
+		var url = "market://details?id=" + pkg;
+		Lib.getURL(new URLRequest(url));
+	}
+
+	public static function amazon(pkg:String) {
+		var url = "amzn://apps/android?p=" + pkg;
+		Lib.getURL(new URLRequest(url));
+	}
+
+	 public static function open(pkg:String = "", ean:String = "")
+	{
+		if(pkg == null || pkg == "") {
+			pkg = Settings.PACKAGE;
+		}
+
+		if(ean == null || ean == "") {
+			ean = Settings.EAN;
+		}
+
+		switch(Settings.APP_STORE) {
+			case "google":
+			google(pkg);
+
+			case "amazon":
+			amazon(pkg);
+
+			#if nook
+			case "nook":
+			var nookstore = openfl.utils.JNI.createStaticMethod("com/puzzleboss/core/NookStore", "openShop", "(Ljava/lang/String;)");
+
+			try {
+				nookstore(ean);
+			}
+			catch(s:String) {
+			}
+
+			return;
+			#end
+		}
+	}
+
 }

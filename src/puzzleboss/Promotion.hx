@@ -68,6 +68,20 @@ class Promotion extends Sprite {
 		_game = pgame;
 		_close = pclose;
 
+		addEventListener(Event.ADDED_TO_STAGE, _onInit);
+		addEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
+	}
+
+	private function _onInit(e:Event) {
+
+		removeEventListener(Event.ADDED_TO_STAGE, _onInit);
+
+		var bg = new Sprite();
+		bg.graphics.beginFill(0xFFFFFF, 1);
+		bg.graphics.drawRect(0, 0, Images.width, Images.height);
+		bg.graphics.endFill();
+		addChild(bg);
+
 		_image = new ImageLoader(_setImage, _cancelImage);
 		_image.load(new URLRequest(_game.imageurl));
 		addChild(_image);
@@ -77,13 +91,7 @@ class Promotion extends Sprite {
 		closebutton.x = Images.width - closebutton.width - 20;
 		closebutton.y = 20;
 
-		addEventListener(Event.ADDED_TO_STAGE, _onInit);
-		addEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
-	}
-
-	private function _onInit(e:Event) {
-		removeEventListener(Event.ADDED_TO_STAGE, _onInit);
-		Events.addUp(Lib.current.stage, _onOpen, true);
+		Events.addClick(this, _onOpen);
 	}
 
 	private function _cancelImage(e:Event) {
@@ -121,7 +129,8 @@ class Promotion extends Sprite {
 	}
 
 	private function _onOpen(e:Event) {
-		if (parent == null || (_image == null || !_image.ready)) {
+
+		if (parent == null || (_image == null || !_image.ready) || e.target != _image) {
 			return;
 		}
 
@@ -139,14 +148,34 @@ class Promotion extends Sprite {
 			return;
 		}
 
-		Analytics.track("/Promotion/open/" + _game.pkg);
-		AppLink.open(_game.pkg, _game.ean);
+		var sp = new Point(sx, sy);
+
+		// which link
+		if(_game.amazonRect != null && _game.amazonRect.containsPoint(sp)) {
+			AppLink.amazon(_game.amazonPackage);
+			Analytics.track("/Promotion/open/amazon/" + _game.amazonPackage);
+		}
+
+		if(_game.googleRect != null && _game.googleRect.containsPoint(sp)) {
+			AppLink.google(_game.googlePackage);
+			Analytics.track("/Promotion/open/google/" + _game.googlePackage);
+		}
+
+		if(_game.nookRect != null && _game.nookRect.containsPoint(sp)) {
+			AppLink.nook(_game.nookEAN, _game.nookURL);
+			Analytics.track("/Promotion/open/nook/" + _game.nookEAN);
+		}
+
+		if(_game.itunesRect != null && _game.itunesRect.containsPoint(sp)) {
+			AppLink.link(_game.itunesURL);
+			Analytics.track("/Promotion/open/itunes/" + _game.itunesURL);
+		}
 	}
 
 	public function _onDispose(e:Event) {
 		removeEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
 		removeEventListener(Event.ADDED_TO_STAGE, _onInit);
-		Events.removeUp(Lib.current.stage, _onOpen, true);
+		Events.removeClick(this, _onOpen);
 		_image = null;
 		_close = null;
 		_game = null;

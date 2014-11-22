@@ -52,5 +52,5 @@ class Settings {
 	public static inline var SHARE_IMAGE:String = "http://files.puzzleboss.com/yourgame/pic.jpg";
 
 	// for your path on the device storage
-	public static inline var PUBLIC_STORAGE:String = "my_folder";
+	public static inline var PUBLIC_STORAGE:String = "my_folder4";
 }

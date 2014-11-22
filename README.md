@@ -68,13 +68,19 @@ To open your game in the appstore:
 
     AppLink.open(); // uses Settings.hx info
 
-To open any game in the appstore:
+To open a game on the appstore you're publishing to:
 
-    AppLink.open("the_package_name"); // for any game
+    AppLink.open("package", "ean");
 
-To open any game in the appstore including the NOOK store:
+To open a game to a particular appstore:
 
-    AppLink.open("the_package_name", "the_ean"); // for any game on the NOOK store
+    AppLink.nook("the_ean", "http://link"); // will deeplink nook appstore on nook tablets
+    AppLink.google("the_package");
+    AppLink.amazon("the_pachage");
+
+To open a link:
+
+    AppLink.link("http://...");
 
 ## Rating prompt
 The rating prompt provides players with a dialogue asking them to rate the game.  It is best
@@ -157,14 +163,32 @@ To create a single Promotion:
         // not ready
     }
 
-If you are going to use your own JSON you will need to modify CrossPromotion.hx to fetch it from your URL,
-and the expected format is:
+If you are going to use your own JSON you will need to modify CrossPromotion.hx to fetch it from your URL.
+
+The cross-promotion allows you to specify an image and define hitareas to link to various appstores.  You
+can exclude any hitareas you don't want.  The rectangle is (x, y, width, height).
 
     {
-        "amazon": [{ "package": "com.hunter_hamster.SnailBob",
-                "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }],
-        "google": [{ "package": "com.hunter_hamster.SnailBob",
-                "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }],
-        "nook": [{ "ean": "1234567890", "package": "com.hunter_hamster.SnailBob",
-                "imageurl": "http://files2.puzzleboss.com/promotions/snailbob.jpg" }]
+        "amazon": [ {
+            "imageurl": "http://files2.puzzleboss.com/promotions/farmanimals-halfprice.jpg",
+            "hitareas": {
+                "amazon": {
+                    "rect": "998,1031,566,269",
+                    "pkg":"com.your.game"
+                },
+                "google": {
+                    "rect": "998,1031,566,269",
+                    "pkg":"com.your.game"
+                },
+                "nook": {
+                    "rect": "998,1031,566,269",
+                    "ean":"n1234567890",
+                    "url": "http:/..."
+                },
+                "iTunes": {
+                    "rect": "998,1031,566,269",
+                    "url":"http:/...."
+                }
+            }
+        }],
     }

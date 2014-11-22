@@ -39,16 +39,23 @@ import haxe.Json;
 
 class CrossPromotion {
 
-	private static inline var THREE_DAYS:Int = 259200;
+	private static inline var ONE_DAY:Int = 86400;
+	private static inline var CACHE_FILE:String = "/promotions.json";
 	public static var ready:Bool = false;
 	private static var _games:Array<CrossPromotion> = null;
 
-	public var ean:String;
-	public var pkg:String;
 	public var imageurl:String;
+	public var amazonRect:Rectangle;
+	public var amazonPackage:String;
+	public var googleRect:Rectangle;
+	public var googlePackage:String;
+	public var nookRect:Rectangle;
+	public var nookEAN:String;
+	public var nookURL:String;
+	public var itunesRect:Rectangle;
+	public var itunesURL:String;
 
-	public function new() {
-	}
+	private function new() { }
 
 	public static function initialize(preserve:Bool = false) {
 		if (!preserve) {
@@ -57,24 +64,20 @@ class CrossPromotion {
 
 		// load promotion _games
 		var path = Path.path();
-		var cachefile = path + "promotions.json";
-		var url = "http://files2.puzzleboss.com/publishernetwork.json?" + Math.random();
-		var loader = new URLLoader(_processData);
-		var path = Path.path();
+		var cachefile = path + CACHE_FILE;
 
 		#if !flash
 		if (FileSystem.exists(cachefile)) {
 			var cached = File.getContent(cachefile);
-			var json = haxe.Json.parse(cached);
-			var cdate = json.cached;
-			var cnow = Timer.stamp();
+			var json = Json.parse(cached);
+			var cdate:Int = Std.parseInt(json.cached);
+			var cnow:Int = _timestamp();
 
 			// cache for 3 days
 			var diff = cnow - cdate;
 
-			if (diff < THREE_DAYS) {
-				loader.data = cached;
-				_processData(loader);
+			if (diff < ONE_DAY) {
+				_processData(json.data);
 				return;
 			}
 			else {
@@ -84,26 +87,27 @@ class CrossPromotion {
 		#end
 
 		try {
+			var url = "http://files2.puzzleboss.com/publishernetwork.json?" + Math.random();
+			var loader = new URLLoader(_dataLoaded);
 			loader.load(new URLRequest(url));
 		}
-		catch(s:String)
-		{
+		catch(s:String) {
 		}
 	}
 
-	private static function _processData(loader:URLLoader) {
-		var json:Dynamic = null;
+	private static function _dataLoaded(loader:URLLoader) {
+		_processData(Json.parse(loader.data));
 
-		try {
-			json = Json.parse(loader.data);
-		}
-		catch(s:String) {
-			return;
-		}
+		var fout = File.write(Path.path() + CACHE_FILE, true);
+		fout.writeString(" { \"cached\": " + _timestamp() + ", \"data\": " + loader.data + " } ");
+		fout.close();
+	}
 
-		if (json == null) {
-			return;
-		}
+	private static function _timestamp():Int {
+		return Std.int(Date.now().getTime() / 1000);
+	}
+
+	private static function _processData(json:Dynamic) {
 
 		var games:Array<Dynamic> = Reflect.getProperty(json, Settings.VENDOR);
 
@@ -112,23 +116,48 @@ class CrossPromotion {
 			// note:  at puzzleboss we patch together our promotions with various
 			// overlays and dynamically generated logos and stuff, this ensures
 			// the test json (ours) will still be okay
-			if (!Reflect.hasField(gdata, "imageurl")) {
+			if (!Reflect.hasField(gdata, "imageurl") || !Reflect.hasField(gdata, "hitareas")) {
 				continue;
 			}
 
 			var cp = new CrossPromotion();
-			cp.pkg = Reflect.getProperty(gdata, "package");
+			cp.imageurl = Reflect.hasField(gdata, "imageurl") ? Reflect.getProperty(gdata, "imageurl") : null;
 
-			if(cp.pkg == Settings.PACKAGE) {
-				continue;
+			if(gdata.hitareas.amazon != null) {
+				cp.amazonRect = makeRect(gdata.hitareas.amazon.rect);
+				cp.amazonPackage = gdata.hitareas.amazon.pkg;
 			}
 
-			cp.imageurl = Reflect.hasField(gdata, "imageurl") ? Reflect.getProperty(gdata, "imageurl") : null;
-			cp.ean = Reflect.hasField(gdata, "ean") ? Reflect.getProperty(gdata, "ean") : null;
+			if(gdata.hitareas.google != null) {
+				cp.googleRect = makeRect(gdata.hitareas.google.rect);
+				cp.googlePackage = gdata.hitareas.google.pkg;
+			}
+
+			if(gdata.hitareas.nook != null) {
+				cp.nookRect = makeRect(gdata.hitareas.nook.rect);
+				cp.nookEAN = gdata.hitareas.nook.ean;
+				cp.nookURL = gdata.hitareas.nook.url;
+			}
+
+			if(gdata.hitareas.itunes != null) {
+				cp.itunesRect = makeRect(gdata.hitareas.itunes.rect);
+				cp.itunesURL = gdata.hitareas.itunes.url;
+			}
+
 			_games.push(cp);
 		}
 
 		ready = true;
+	}
+
+	private static function makeRect(str:String):Rectangle {
+		var sp = str.split(",");
+		var rect = new Rectangle();
+		rect.x = sp.length > 0 ? Std.parseFloat(sp[0]) * Images.scaleX : 0;
+		rect.y = sp.length > 1 ? Std.parseFloat(sp[1]) * Images.scaleY : 0;
+		rect.width = sp.length > 2 ? Std.parseFloat(sp[2]) * Images.scaleX : 0;
+		rect.height = sp.length > 3 ? Std.parseFloat(sp[3]) * Images.scaleY : 0;
+		return rect;
 	}
 
 	public static function getGames(num:Int):Array<CrossPromotion> {

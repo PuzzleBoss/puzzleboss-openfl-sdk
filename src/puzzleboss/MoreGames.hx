@@ -44,7 +44,6 @@ class MoreGames extends Sprite {
 	private var onclose:Event->Void;
 	private var closeButton:IconButton;
 
-
 	public static function create(parent:Sprite, ponclose:Event->Void):MoreGames {
 
 		if(CrossPromotion.ready) {

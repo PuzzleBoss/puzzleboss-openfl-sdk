@@ -15,7 +15,7 @@ public class NookStore
      *
      * @param ean the app id
      */
-    public static String openShop(final String ean) {
+    public static void openShop(final String ean) {
         Activity currentActivity = GameActivity.getInstance();
 
         Intent i = new Intent();
@@ -26,10 +26,6 @@ public class NookStore
             currentActivity.startActivity(i);
         }
         catch(Exception e) {
-            Log.d("MainActivity", e.toString());
-            GameActivity.launchBrowser("https://barnesandnoble.com");
         }
-
-        return ean;
     }
 }

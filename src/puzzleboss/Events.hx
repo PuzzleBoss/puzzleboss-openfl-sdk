@@ -31,18 +31,18 @@ import flash.events.MouseEvent;
 
 class Events {
 
-	private static function _addClick(obj:DisplayObject, onWhatever:Event->Void) {
+	public static function addClick(obj:DisplayObject, onWhatever:Event->Void) {
 		_addEvent(MouseEvent.CLICK, obj, onWhatever);
 	}
 
-	private static function _removeClick(obj:DisplayObject, onWhatever:Event->Void) {
+	public static function removeClick(obj:DisplayObject, onWhatever:Event->Void) {
 		_removeEvent(MouseEvent.CLICK, obj, onWhatever);
 	}
 
 	public static function addUp(obj:DisplayObject, onWhatever:Event->Void, isclick:Bool) {
 		#if !html5
 		if (isclick) {
-			_addClick(obj, onWhatever);
+			addClick(obj, onWhatever);
 			return;
 		}
 		#end
@@ -53,7 +53,7 @@ class Events {
 	public static function removeUp(obj:DisplayObject, onWhatever, isclick:Bool) {
 		#if !html5
 		if (isclick) {
-			_removeClick(obj, onWhatever);
+			removeClick(obj, onWhatever);
 			return;
 		}
 		#end
