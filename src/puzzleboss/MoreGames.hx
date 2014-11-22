@@ -42,6 +42,8 @@ class MoreGames extends Sprite {
 	private var prev:Sprite;
 	private var next:Sprite;
 	private var onclose:Event->Void;
+	private var closeButton:IconButton;
+
 
 	public static function create(parent:Sprite, ponclose:Event->Void):Bool {
 
@@ -98,8 +100,12 @@ class MoreGames extends Sprite {
 		next.y = prev.y;
 		Events.addUp(next, nextGame, true);
 
-		if (promotions != null)
-		{
+		closeButton = new IconButton("icon_close", close);
+		addChild(closeButton);
+		closeButton.x = Images.width - closeButton.width - 20;
+		closeButton.y = 20;
+
+		if (promotions != null) {
 			refresh(null);
 		}
 	}
@@ -147,6 +153,10 @@ class MoreGames extends Sprite {
 
 		promo = new Promotion(promotions[index], close);
 		addChildAt(promo, 2);
+
+		setChildIndex(closeButton, numChildren - 1);
+		setChildIndex(next, numChildren - 1);
+		setChildIndex(prev, numChildren - 1);
 	}
 
 	private function close(e:Event) {
