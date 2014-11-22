@@ -37,13 +37,12 @@ class ImageLoader extends Loader {
 		super();
 		_complete = pcomplete;
 		_fail = pfail;
-		addEventListener("ioError", _onFail);
-		addEventListener("securityError", _onFail);
-		addEventListener("uncaughtError", _onFail);
-		addEventListener("httpStatus", _onIgnore);
-		addEventListener("progress", _onIgnore);
-		addEventListener("complete", _onComplete);
-
+		contentLoaderInfo.addEventListener("ioError", _onFail);
+		contentLoaderInfo.addEventListener("securityError", _onFail);
+		contentLoaderInfo.addEventListener("uncaughtError", _onFail);
+		contentLoaderInfo.addEventListener("httpStatus", _onIgnore);
+		contentLoaderInfo.addEventListener("progress", _onIgnore);
+		contentLoaderInfo.addEventListener("complete", _onComplete);
 		addEventListener(Event.REMOVED_FROM_STAGE, onDispose);
 	}
 
@@ -70,12 +69,12 @@ class ImageLoader extends Loader {
 	public function onDispose(e:Event) {
 		_complete = null;
 		_fail = null;
-		removeEventListener("ioError", _onFail);
-		removeEventListener("securityError", _onFail);
-		removeEventListener("uncaughtError", _onFail);
-		removeEventListener("httpStatus", _onIgnore);
-		removeEventListener("progress", _onIgnore);
-		removeEventListener("complete", _onComplete);
+		contentLoaderInfo.removeEventListener("ioError", _onFail);
+		contentLoaderInfo.removeEventListener("securityError", _onFail);
+		contentLoaderInfo.removeEventListener("uncaughtError", _onFail);
+		contentLoaderInfo.removeEventListener("httpStatus", _onIgnore);
+		contentLoaderInfo.removeEventListener("progress", _onIgnore);
+		contentLoaderInfo.removeEventListener("complete", _onComplete);
 		removeEventListener(Event.REMOVED_FROM_STAGE, onDispose);
 	}
 }
