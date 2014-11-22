@@ -39,21 +39,21 @@ class ImageButton extends Sprite {
 	public function new(pup:String, pover:String, ponclick:Event->Void) {
 		super();
 
-		onclick = ponclick;
+		_onClick = ponclick;
 		mouseChildren = false;
 		useHandCursor = true;
 		buttonMode = true;
 
 		if (pup != null) {
 			upimg = new Bitmap();
-			Images.loadBitmap(pup, upimg);
+			Images.attach(pup, upimg);
 			upimg.smoothing = true;
 			addChild(upimg);
 		}
 
 		if (pover != null) {
 			overimg = new Bitmap();
-			Images.loadBitmap(pover, overimg);
+			Images.attach(pover, overimg);
 			overimg.visible = false;
 			overimg.smoothing = true;
 			addChild(overimg);
@@ -81,7 +81,7 @@ class ImageButton extends Sprite {
 
 		upimg.visible = true;
 		overimg.visible = false;
-		Events.removeUp(Lib.current.stage, out, false);
+		Events.removeUp(Lib.current.stage, _onOut, false);
 	}
 
 	private function _onDispose(e:Event) {
@@ -89,7 +89,7 @@ class ImageButton extends Sprite {
 		Events.removeUp(this, _onClick, true);
 		Events.removeOut(this, _onOut);
 		Events.removeDown(this, _onOver);
-		Events.removeUp(Lib.current.stage, out, false);
+		Events.removeUp(Lib.current.stage, _onOut, false);
 		_onClick = null;
 	}
 }

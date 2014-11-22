@@ -84,11 +84,11 @@ class Label extends Sprite {
 			#if flash
 			_fontName = "Droid Sans Bold";
 			#else
-			_fontName = Assets.getFont("fonts/DroidSansBold.ttf")._fontName;
+			_fontName = Assets.getFont("fonts/DroidSansBold.ttf").fontName;
 			#end
 		}
 
-		var pautosize:String = "left";
+		var pautosize = "left";
 
 		if (forcewidth > 1) {
 			pautosize = "none";//TextFieldAutoSize.NONE;
@@ -102,9 +102,6 @@ class Label extends Sprite {
 		if (color == -1) {
 			color = 0xFFFFFF;
 		}
-
-		var key = text + psize + _fontName + pautosize + width + ptype + color;
-		attachbitmap = false;
 
 		textfield = _createTextField(text, psize, center, pautosize, ptype, color, forcewidth, pmultiline);
 		addChild(textfield);
