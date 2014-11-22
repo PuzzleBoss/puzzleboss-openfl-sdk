@@ -58,7 +58,7 @@ class CrossPromotion {
 		// load promotion _games
 		var path = Path.path();
 		var cachefile = path + "promotions.json";
-		var url = "http://files2.puzzleboss.com/jigsawpromotions.json?" + Math.random();
+		var url = "http://files2.puzzleboss.com/publishernetwork.json?" + Math.random();
 		var loader = new URLLoader(_processData);
 		var path = Path.path();
 
@@ -122,7 +122,7 @@ class CrossPromotion {
 			if(cp.pkg == Settings.PACKAGE) {
 				continue;
 			}
-			
+
 			cp.imageurl = Reflect.hasField(gdata, "imageurl") ? Reflect.getProperty(gdata, "imageurl") : null;
 			cp.ean = Reflect.hasField(gdata, "ean") ? Reflect.getProperty(gdata, "ean") : null;
 			_games.push(cp);
