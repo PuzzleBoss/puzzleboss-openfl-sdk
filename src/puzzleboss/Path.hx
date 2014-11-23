@@ -31,6 +31,7 @@ class Path {
 
 	private static inline var JNI_PATH:String = "com/puzzleboss/core/Path";
 	private static inline var JNI_SIGNATURE:String = "(Ljava/lang/String;)Ljava/lang/String;";
+	private static inline var JNI_SUPPORT:String = "com/puzzleboss/core/Support";
 	private static var _path:String = null;
 
 	public static function reset() {
@@ -39,12 +40,53 @@ class Path {
 	}
 
 	public static function path():String {
+
 		if (_path != null) {
 			return _path;
+		}
+
+		var getAPILevel = JNI.createStaticMethod(JNI_SUPPORT, "getAPILevel", "()Ljava/lang/String;");
+		var apilevel = Std.parseInt(getAPILevel());
+
+		if(apilevel < 19) {
+			return legacy();
 		}
 
 		var getpath = JNI.createStaticMethod(JNI_PATH, "getPath", JNI_SIGNATURE);
 		_path = getpath(Settings.PUBLIC_STORAGE);
 		return _path;
+	}
+
+	/*
+	 * legacy returns a path generated for pre-kitkat devices, kitkat introduced
+	 * new rules for writing on the sdcard which prevents this from working
+	 */
+	private static function legacy():String {
+		#if windows
+		var divider = "\\";
+		#else
+		var divider = "/";
+		#end
+
+		#if android
+		var path = FileSystem.exists("/media/") ? "/media/" : "/sdcard/";
+		#elseif ios
+		var path = SystemPath.applicationStorageDirectory;
+		#else
+		var path = SystemPath.userDirectory;
+		#end
+
+		if(!FileSystem.exists(path)) {
+			FileSystem.createDirectory(path);
+		}
+
+		path += Settings.PUBLIC_STORAGE + divider;
+
+		if(!FileSystem.exists(path)) {
+			FileSystem.createDirectory(path);
+		}
+
+		_path = path;
+		return path;
 	}
 }
