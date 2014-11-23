@@ -74,11 +74,6 @@ class MoreGames extends Sprite {
 		bg.graphics.endFill();
 		addChild(bg);
 
-		var loader = new LoaderAnim();
-		loader.x = Math.floor(Images.width / 2);
-		loader.y = Math.floor(Images.height / 2);
-		addChild(loader);
-
 		// previous and next buttons
 		var pbmp = new Bitmap();
 		Images.attach("prevnext", pbmp, true);

@@ -76,11 +76,14 @@ class Promotion extends Sprite {
 
 		removeEventListener(Event.ADDED_TO_STAGE, _onInit);
 
-		var bg = new Sprite();
-		bg.graphics.beginFill(0xFFFFFF, 1);
-		bg.graphics.drawRect(0, 0, Images.width, Images.height);
-		bg.graphics.endFill();
-		addChild(bg);
+		graphics.beginFill(0xFFFFFF, 1);
+		graphics.drawRect(0, 0, Images.width, Images.height);
+		graphics.endFill();
+
+		var loader = new LoaderAnim();
+		loader.x = Math.floor(Images.width / 2);
+		loader.y = Math.floor(Images.height / 2);
+		addChild(loader);
 
 		_image = new ImageLoader(_setImage, _cancelImage);
 		_image.load(new URLRequest(_game.imageurl));
