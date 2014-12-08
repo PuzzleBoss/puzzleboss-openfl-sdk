@@ -24,7 +24,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-package ;
+package puzzleboss;
 
 class KeyCodes {
 	public static inline var BACK:Int = 27;
