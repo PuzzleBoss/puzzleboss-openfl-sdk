@@ -26,6 +26,8 @@ IN THE SOFTWARE.
 
 package puzzleboss;
 import openfl.utils.JNI;
+import sys.io.File;
+import sys.FileSystem;
 
 class Path {
 
