@@ -40,7 +40,7 @@ Create a 'share' image for your game when it is shared on eg Pinterest and uploa
 
 Initialize classes
 
-    CrossPromotion.intialize();
+    CrossPromotion.initialize();
     Images.initialize();
     Analytics.initialize();
 
