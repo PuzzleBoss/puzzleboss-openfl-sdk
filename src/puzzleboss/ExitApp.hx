@@ -54,7 +54,7 @@ class ExitApp {
 		exit();
 	}
 
-	private function _onBack(e:KeyboardEvent)
+	private static function _onBack(e:KeyboardEvent)
 	{
 		if(e.keyCode != KeyCodes.BACK) {
 			return;
