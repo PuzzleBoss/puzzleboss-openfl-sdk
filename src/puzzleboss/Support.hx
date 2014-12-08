@@ -71,7 +71,7 @@ class Support extends Sprite {
 		var data = getJNIData();
 		data.push("Screen resolution: " + Images.width + "x" + Images.height);
 		data.push("Game: " + Settings.NAME);
-		data.push("Store: " + Settings.VENDOR);
+		data.push("Store: " + Settings.APP_STORE);
 		data.push("Version: " + Settings.VERSION);
 
 		note = new Label(data.join("\n"), 14);
