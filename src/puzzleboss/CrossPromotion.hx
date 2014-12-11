@@ -45,13 +45,14 @@ class CrossPromotion {
 	private static var _games:Array<CrossPromotion> = null;
 
 	public var imageurl:String;
+	public var url:String;
+	public var urlRect:Rectangle;
 	public var amazonRect:Rectangle;
 	public var amazonPackage:String;
 	public var googleRect:Rectangle;
 	public var googlePackage:String;
 	public var nookRect:Rectangle;
 	public var nookEAN:String;
-	public var nookURL:String;
 	public var itunesRect:Rectangle;
 	public var itunesURL:String;
 
@@ -136,12 +137,16 @@ class CrossPromotion {
 			if(gdata.hitareas.nook != null) {
 				cp.nookRect = makeRect(gdata.hitareas.nook.rect);
 				cp.nookEAN = gdata.hitareas.nook.ean;
-				cp.nookURL = gdata.hitareas.nook.url;
 			}
 
 			if(gdata.hitareas.itunes != null) {
 				cp.itunesRect = makeRect(gdata.hitareas.itunes.rect);
 				cp.itunesURL = gdata.hitareas.itunes.url;
+			}
+
+			if(gdata.hitareas.url != null) {
+				cp.url = gdata.hitareas.url.url;
+				cp.urlRect = makeRect(gdata.hitareas.url.rect);
 			}
 
 			_games.push(cp);
