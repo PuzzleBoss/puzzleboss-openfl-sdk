@@ -57,7 +57,7 @@ class AppLink {
 		Lib.getURL(new URLRequest(url), "_blank");
 	}
 
-	public static function nook(ean:String, url:String) {
+	public static function nook(ean:String) {
 
 		#if nook
 		var nookstore = openfl.utils.JNI.createStaticMethod("com/puzzleboss/core/NookStore", "openShop", "(Ljava/lang/String;)Ljava/lang/String;");
@@ -71,9 +71,7 @@ class AppLink {
 		return;
 		#end
 
-		if(url != null && url != "") {
-			Lib.getURL(new URLRequest(url));
-		}
+		Lib.getURL(new URLRequest("https://nookdeveloper.barnesandnoble.com/tools/dev/linkManager/" + ean));
 	}
 
 	public static function google(pkg:String) {

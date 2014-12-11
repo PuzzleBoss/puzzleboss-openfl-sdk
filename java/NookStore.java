@@ -26,6 +26,7 @@ public class NookStore
             currentActivity.startActivity(i);
         }
         catch(Exception e) {
+            GameActivity.launchBrowser("https://nookdeveloper.barnesandnoble.com/tools/dev/linkManager/" + ean);
         }
     }
 }
