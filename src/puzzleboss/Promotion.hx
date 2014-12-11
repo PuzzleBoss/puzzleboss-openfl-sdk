@@ -165,7 +165,7 @@ class Promotion extends Sprite {
 		}
 
 		if(_game.nookRect != null && _game.nookRect.containsPoint(sp)) {
-			AppLink.nook(_game.nookEAN, _game.nookURL);
+			AppLink.nook(_game.nookEAN);
 			Analytics.track("/Promotion/open/nook/" + _game.nookEAN);
 		}
 
