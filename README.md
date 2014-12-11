@@ -183,11 +183,14 @@ can exclude any hitareas you don't want.  The rectangle is (x, y, width, height)
                 "nook": {
                     "rect": "998,1031,566,269",
                     "ean":"n1234567890",
-                    "url": "http:/..."
                 },
                 "iTunes": {
                     "rect": "998,1031,566,269",
                     "url":"http:/...."
+                },
+                "url": {
+                    "rect": "123,123,123,123",
+                    "url": "https://www.google.com...."
                 }
             }
         }],
