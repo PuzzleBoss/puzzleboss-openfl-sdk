@@ -36,7 +36,9 @@ import flash.filters.GlowFilter;
 import flash.geom.Rectangle;
 import flash.Lib;
 import motion.Actuate;
+#if android
 import openfl.utils.JNI;
+#end
 
 class Support extends Sprite {
 	private var note:Label;
@@ -48,6 +50,10 @@ class Support extends Sprite {
 		scrollRect = new Rectangle(0, 0, Images.width, Images.height);
 		addEventListener(Event.ADDED_TO_STAGE, init);
 		addEventListener(Event.REMOVED_FROM_STAGE, dispose);
+
+		graphics.beginFill(0x000000, 0.75);
+		graphics.drawRect(0, 0, Images.width, Images.height);
+		graphics.endFill();
 	}
 
 	private function init(e:Event) {
@@ -56,14 +62,15 @@ class Support extends Sprite {
 		var container = new Sprite();
 		addChild(container);
 
-		var label = new Label("PuzzleBoss support: support@puzzleboss.com", 20);
+		var label = new Label("PuzzleBoss support: support@puzzleboss.com", 30);
 		label.x = 10;
 		label.y = 10;
 		container.addChild(label);
 
-		var label2 = new Label("If you email from your computer please include this information, it will automatically\n" +
-		"be included if you press 'Send email'.  Support available in English only!\n\n" +
-		"Uninstalling the app and then downloading again often fixes problems.", 14);
+		var label2 = new Label("If you email from your computer please include this information,\n" +
+		"it will automatically be included if you press 'Send email'.  Support\n" +
+		"available in English only!\n\n" +
+		"Uninstalling the app and then downloading again often fixes problems.", 20);
 		label2.x = 10;
 		label2.y = label.y + label.height + 16;
 		container.addChild(label2);
