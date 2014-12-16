@@ -31,7 +31,8 @@ import flash.net.SharedObject;
 
 class Rating extends Sprite {
 
-	private var _onClose:Event->Void;
+	private var _clickHandler:Event->Void;
+	private var _support:Support;
 
 	public static function create(parent:Sprite, ponclose:Event->Void):Rating {
 		#if (flash || html5 || mac)
@@ -51,7 +52,7 @@ class Rating extends Sprite {
 
 	public function new(ponclose:Event->Void) {
 		super();
-		_onClose = ponclose;
+		_clickHandler = ponclose;
 		addEventListener(Event.ADDED_TO_STAGE, _onInit);
 		addEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
 	}
@@ -89,16 +90,20 @@ class Rating extends Sprite {
 		buttons.y = message.y + message.height + (20 * Images.scaleY);
 		container.addChild(buttons);
 
-		var updatebutton = new TextButton("Rate", _rate);
+		var updatebutton = new TextButton("Rate", _onRate);
 		buttons.addChild(updatebutton);
 
-		var closebutton = new TextButton("No thanks", _close);
-		closebutton.x = updatebutton.x + updatebutton.width + (20 * Images.scaleY);
+		var closebutton = new TextButton("No thanks", _onClose);
+		closebutton.x = updatebutton.x + updatebutton.width + (20 * Images.scaleX);
 		buttons.addChild(closebutton);
 
-		var neverbutton = new TextButton("Never", _never);
-		neverbutton.x = closebutton.x + closebutton.width + (20 * Images.scaleY);
+		var neverbutton = new TextButton("Never", _onNever);
+		neverbutton.x = closebutton.x + closebutton.width + (20 * Images.scaleX);
 		buttons.addChild(neverbutton);
+
+		var supportbutton = new TextButton(Language.get("Support"), _openSupport);
+		supportbutton.x = neverbutton.x + neverbutton.width + (20 * Images.scaleX);
+		buttons.addChild(supportbutton);
 
 		bar.height = container.height + (40 * Images.scaleY);
 		bar.y = Math.floor((Images.height - bar.height) / 2);
@@ -106,25 +111,37 @@ class Rating extends Sprite {
 		container.x = Math.floor((Images.width - container.width) / 2);
 	}
 
-	private function _rate(e:Event) {
-		AppLink.open(Settings.PACKAGE, Settings.EAN);
-		_never(e);
+	private function _openSupport(e:Event) {
+		_support = new Support(_closeSupport);
+		addChild(_support);
 	}
 
-	private function _never(e:Event) {
+	private function _closeSupport(e:Event) {
+		removeChild(_support);
+		_support = null;
+	}
+
+	private function _onRate(e:Event) {
+		AppLink.open(Settings.PACKAGE, Settings.EAN);
+		_onNever(e);
+	}
+
+	private function _onNever(e:Event) {
 		var so = SharedObject.getLocal("prompt");
 		so.data.noprompt = "true";
 		so.flush();
-		_close(e);
+		_onClose(e);
 	}
 
-	private function _close(e:Event) {
-		_onClose(e);
+	private function _onClose(e:Event) {
+		if (_clickHandler != null) {
+			_clickHandler(e);
+		}
 	}
 
 	private function _onDispose(e:Event) {
 		removeEventListener(Event.ADDED_TO_STAGE, _onInit);
 		removeEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
-		_onClose = null;
+		_clickHandler = null;
 	}
 }

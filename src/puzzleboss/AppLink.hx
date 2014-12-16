@@ -58,9 +58,8 @@ class AppLink {
 	}
 
 	public static function nook(ean:String) {
-
 		#if nook
-		var nookstore = openfl.utils.JNI.createStaticMethod("com/puzzleboss/core/NookStore", "openShop", "(Ljava/lang/String;)Ljava/lang/String;");
+		var nookstore = JNI.createStaticMethod(NOOK_JNI_PATH, NOOK_JNI_METHOD, NOOK_JNI_SIGNATURE);
 
 		try {
 			nookstore(ean);
@@ -71,7 +70,8 @@ class AppLink {
 		return;
 		#end
 
-		Lib.getURL(new URLRequest("https://nookdeveloper.barnesandnoble.com/tools/dev/linkManager/" + ean));
+		var url = "https://nookdeveloper.barnesandnoble.com/tools/dev/linkManager/" + ean;
+		Lib.getURL(new URLRequest(url));
 	}
 
 	public static function google(pkg:String) {
@@ -84,13 +84,12 @@ class AppLink {
 		Lib.getURL(new URLRequest(url));
 	}
 
-	 public static function open(pkg:String = "", ean:String = "")
-	{
-		if(pkg == null || pkg == "") {
+	public static function open(pkg:String = "", ean:String = "") {
+		if (pkg == null || pkg == "") {
 			pkg = Settings.PACKAGE;
 		}
 
-		if(ean == null || ean == "") {
+		if (ean == null || ean == "") {
 			ean = Settings.EAN;
 		}
 
@@ -101,19 +100,8 @@ class AppLink {
 			case "amazon":
 			amazon(pkg);
 
-			#if nook
 			case "nook":
-			var nookstore = openfl.utils.JNI.createStaticMethod("com/puzzleboss/core/NookStore", "openShop", "(Ljava/lang/String;)");
-
-			try {
-				nookstore(ean);
-			}
-			catch(s:String) {
-			}
-
-			return;
-			#end
+			nook(ean);
 		}
 	}
-
 }

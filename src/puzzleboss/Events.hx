@@ -39,25 +39,11 @@ class Events {
 		_removeEvent(MouseEvent.CLICK, obj, onWhatever);
 	}
 
-	public static function addUp(obj:DisplayObject, onWhatever:Event->Void, isclick:Bool) {
-		#if !html5
-		if (isclick) {
-			addClick(obj, onWhatever);
-			return;
-		}
-		#end
-
+	public static function addUp(obj:DisplayObject, onWhatever:Event->Void) {
 		_addEvent(MouseEvent.MOUSE_UP, obj, onWhatever);
 	}
 
-	public static function removeUp(obj:DisplayObject, onWhatever, isclick:Bool) {
-		#if !html5
-		if (isclick) {
-			removeClick(obj, onWhatever);
-			return;
-		}
-		#end
-
+	public static function removeUp(obj:DisplayObject, onWhatever) {
 		_removeEvent(MouseEvent.MOUSE_UP, obj, onWhatever);
 	}
 

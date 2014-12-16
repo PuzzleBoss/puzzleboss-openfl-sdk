@@ -26,7 +26,6 @@ IN THE SOFTWARE.
 
 package puzzleboss;
 import flash.display.Bitmap;
-import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.Lib;
@@ -59,7 +58,7 @@ class ImageButton extends Sprite {
 			addChild(overimg);
 		}
 
-		Events.addUp(this, _onClick, true);
+		Events.addClick(this, _onClick);
 		Events.addDown(this, _onOver);
 		addEventListener(Event.REMOVED_FROM_STAGE, _onDispose, false);
 	}
@@ -71,7 +70,7 @@ class ImageButton extends Sprite {
 
 		upimg.visible = false;
 		overimg.visible = true;
-		Events.addUp(Lib.current.stage, _onOut, false);
+		Events.addUp(Lib.current.stage, _onOut);
 	}
 
 	private function _onOut(e:Event) {
@@ -81,15 +80,15 @@ class ImageButton extends Sprite {
 
 		upimg.visible = true;
 		overimg.visible = false;
-		Events.removeUp(Lib.current.stage, _onOut, false);
+		Events.removeUp(Lib.current.stage, _onOut);
 	}
 
 	private function _onDispose(e:Event) {
 		removeEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
-		Events.removeUp(this, _onClick, true);
+		Events.removeClick(this, _onClick);
 		Events.removeOut(this, _onOut);
 		Events.removeDown(this, _onOver);
-		Events.removeUp(Lib.current.stage, _onOut, false);
+		Events.removeUp(Lib.current.stage, _onOut);
 		_onClick = null;
 	}
 }

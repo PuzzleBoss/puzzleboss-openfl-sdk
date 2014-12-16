@@ -27,7 +27,6 @@ IN THE SOFTWARE.
 package puzzleboss;
 import flash.display.Sprite;
 import flash.display.Bitmap;
-import flash.display.BitmapData;
 import flash.events.Event;
 
 class IconButton extends Sprite {
@@ -47,11 +46,11 @@ class IconButton extends Sprite {
 		buttonMode = true;
 
 		addEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
-		Events.addUp(this, _onclick, true);
+		Events.addClick(this, _onclick);
 	}
 
 	private function _onDispose(e:Event) {
-		Events.removeUp(this, _onclick, true);
+		Events.removeClick(this, _onclick);
 		removeEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
 		_onclick = null;
 	}

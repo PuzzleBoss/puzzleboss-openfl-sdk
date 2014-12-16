@@ -27,9 +27,6 @@ IN THE SOFTWARE.
 package puzzleboss;
 import flash.events.Event;
 import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.geom.Point;
-import flash.geom.Rectangle;
 
 class TextButton extends ImageButton {
 	public var label:Label;

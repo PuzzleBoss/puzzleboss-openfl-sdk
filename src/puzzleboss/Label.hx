@@ -25,7 +25,6 @@ IN THE SOFTWARE.
 */
 
 package puzzleboss;
-import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.text.TextField;
@@ -33,11 +32,6 @@ import flash.text.TextFormat;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFieldType;
 import flash.text.TextFormatAlign;
-import flash.text.Font;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.geom.Rectangle;
-import flash.utils.ByteArray;
 import openfl.Assets;
 
 class Label extends Sprite {
@@ -55,7 +49,7 @@ class Label extends Sprite {
 	}
 
 	public function new(ptext:String = "", psize:Int=20, center:Bool=false, ptype:String=null, color:Int = -1,
-	forcewidth:Int = 1, pmultiline:Bool = false) {
+	forcewidth:Float = 1, pmultiline:Bool = false) {
 		super();
 
 		if (_cache == null) {
@@ -109,7 +103,7 @@ class Label extends Sprite {
 
 	private function _createTextField(ptext:String = "", psize:Int=20, center:Bool=false,
 	pautosize:String=null, ptype:String=null, color:Int = -1,
-	forcewidth:Int = 1, pmultiline:Bool = false, attachbitmap:Bool = true):TextField {
+	forcewidth:Float = 1, pmultiline:Bool = false, attachbitmap:Bool = true):TextField {
 
 		var tf = new TextFormat(_fontName);
 		tf.color = color;
@@ -117,7 +111,7 @@ class Label extends Sprite {
 		tf.size = psize;
 
 		var tl = new TextField();
-		tl.multiline = pmultiline || forcewidth > 1;
+		tl.multiline = pmultiline;
 		tl.setTextFormat(tf);
 
 		switch(pautosize) {
@@ -144,6 +138,10 @@ class Label extends Sprite {
 		}
 
 		tl.text = ptext;
+
+		if (forcewidth > 1) {
+			tl.width = forcewidth;
+		}
 
 		return tl;
 	}

@@ -25,39 +25,33 @@ IN THE SOFTWARE.
 */
 
 package puzzleboss;
-import flash.display.Bitmap;
-import flash.display.BitmapData;
 import flash.display.Sprite;
-import flash.display.DisplayObjectContainer;
 import flash.display.DisplayObject;
 import flash.events.Event;
-import flash.events.KeyboardEvent;
-import flash.filters.GlowFilter;
 import flash.geom.Rectangle;
-import flash.Lib;
 import motion.Actuate;
 #if android
 import openfl.utils.JNI;
 #end
 
 class Support extends Sprite {
-	private var note:Label;
-	private var onclose:Event->Void;
+	private var _note:Label;
+	private var _clickHandler:Event->Void;
 
 	public function new(ponclose:Event->Void) {
 		super();
-		onclose = ponclose;
+		_clickHandler = ponclose;
 		scrollRect = new Rectangle(0, 0, Images.width, Images.height);
-		addEventListener(Event.ADDED_TO_STAGE, init);
-		addEventListener(Event.REMOVED_FROM_STAGE, dispose);
+		addEventListener(Event.ADDED_TO_STAGE, _onInit);
+		addEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
 
 		graphics.beginFill(0x000000, 0.75);
 		graphics.drawRect(0, 0, Images.width, Images.height);
 		graphics.endFill();
 	}
 
-	private function init(e:Event) {
-		removeEventListener(Event.ADDED_TO_STAGE, init);
+	private function _onInit(e:Event) {
+		removeEventListener(Event.ADDED_TO_STAGE, _onInit);
 
 		var container = new Sprite();
 		addChild(container);
@@ -75,16 +69,16 @@ class Support extends Sprite {
 		label2.y = label.y + label.height + 16;
 		container.addChild(label2);
 
-		var data = getJNIData();
+		var data = _getJNIData();
 		data.push("Screen resolution: " + Images.width + "x" + Images.height);
 		data.push("Game: " + Settings.NAME);
 		data.push("Store: " + Settings.APP_STORE);
 		data.push("Version: " + Settings.VERSION);
 
-		note = new Label(data.join("\n"), 14);
-		note.x = label.x;
-		note.y = label2.y + label2.height + 20;
-		container.addChild(note);
+		_note = new Label(data.join("\n"), 14);
+		_note.x = label.x;
+		_note.y = label2.y + label2.height + 20;
+		container.addChild(_note);
 
 		container.x = Math.floor((Images.width - container.width) / 2);
 		container.y = Math.floor((Images.height - container.height) / 2);
@@ -92,10 +86,10 @@ class Support extends Sprite {
 		var buttons = new Sprite();
 		addChild(buttons);
 
-		var homeButton = new TextButton("Back", close);
+		var homeButton = new TextButton("Back", _onClose);
 		buttons.addChild(homeButton);
 
-		var emailButton = new TextButton("Send email", sendMail);
+		var emailButton = new TextButton("Send email", _sendMail);
 		emailButton.x = homeButton.x + homeButton.width + 20;
 		buttons.addChild(emailButton);
 
@@ -103,13 +97,13 @@ class Support extends Sprite {
 		buttons.y = Images.height - buttons.height - 20;
 	}
 
-	private function sendMail(e:Event) {
+	private function _sendMail(e:Event) {
 		var send = JNI.createStaticMethod("com/puzzleboss/core/Support", "sendEmail", "(Ljava/lang/String;)V");
-		send(note.text);
+		send(_note.text);
 	}
 
-	private static function getJNIData():Array<String> {
-		var data = new Array<String>();
+	private static function _getJNIData():Array<String> {
+		var data:Array<String> = [];
 		var jni = "com/puzzleboss/core/Support";
 		var getOS = JNI.createStaticMethod(jni, "getOS", "()Ljava/lang/String;");
 		var getAPILevel = JNI.createStaticMethod(jni, "getAPILevel", "()Ljava/lang/String;");
@@ -118,8 +112,7 @@ class Support extends Sprite {
 		var getProduct = JNI.createStaticMethod(jni, "getProduct", "()Ljava/lang/String;");
 
 		var os:String = getOS();
-		if (os.indexOf("-") > -1)
-		{
+		if (os.indexOf("-") > -1) {
 			os = os.substr(0, os.indexOf("-"));
 		}
 
@@ -128,16 +121,18 @@ class Support extends Sprite {
 		data.push("Device: " + getDevice());
 		//data.push("Model: " + getModel());
 		//data.push("Product: " + getProduct());
-
 		return data;
 	}
 
-	private function close(e:Event) {
-		onclose(e);
+	private function _onClose(e:Event) {
+		if (_clickHandler != null) {
+			_clickHandler(e);
+		}
 	}
 
-	private function dispose(e:Event) {
-		removeEventListener(Event.ADDED_TO_STAGE, init);
-		removeEventListener(Event.REMOVED_FROM_STAGE, dispose);
+	private function _onDispose(e:Event) {
+		removeEventListener(Event.ADDED_TO_STAGE, _onInit);
+		removeEventListener(Event.REMOVED_FROM_STAGE, _onDispose);
+		_clickHandler = null;
 	}
 }

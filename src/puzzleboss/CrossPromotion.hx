@@ -25,14 +25,10 @@ IN THE SOFTWARE.
 */
 
 package puzzleboss;
-import flash.display.BitmapData;
-import flash.events.Event;
 import flash.geom.Rectangle;
 import flash.net.URLRequest;
-import haxe.Timer;
 import sys.io.File;
 import sys.io.FileOutput;
-import sys.io.FileInput;
 import sys.FileSystem;
 import haxe.ds.ArraySort;
 import haxe.Json;
@@ -56,7 +52,7 @@ class CrossPromotion {
 	public var itunesRect:Rectangle;
 	public var itunesURL:String;
 
-	private function new() { }
+	public function new() {}
 
 	public static function initialize(preserve:Bool = false) {
 		if (!preserve) {
@@ -124,29 +120,29 @@ class CrossPromotion {
 			var cp = new CrossPromotion();
 			cp.imageurl = Reflect.hasField(gdata, "imageurl") ? Reflect.getProperty(gdata, "imageurl") : null;
 
-			if(gdata.hitareas.amazon != null) {
-				cp.amazonRect = makeRect(gdata.hitareas.amazon.rect);
+			if (gdata.hitareas.amazon != null) {
+				cp.amazonRect = _makeRectangle(gdata.hitareas.amazon.rect);
 				cp.amazonPackage = gdata.hitareas.amazon.pkg;
 			}
 
-			if(gdata.hitareas.google != null) {
-				cp.googleRect = makeRect(gdata.hitareas.google.rect);
+			if (gdata.hitareas.google != null) {
+				cp.googleRect = _makeRectangle(gdata.hitareas.google.rect);
 				cp.googlePackage = gdata.hitareas.google.pkg;
 			}
 
-			if(gdata.hitareas.nook != null) {
-				cp.nookRect = makeRect(gdata.hitareas.nook.rect);
+			if (gdata.hitareas.nook != null) {
+				cp.nookRect = _makeRectangle(gdata.hitareas.nook.rect);
 				cp.nookEAN = gdata.hitareas.nook.ean;
 			}
 
-			if(gdata.hitareas.itunes != null) {
-				cp.itunesRect = makeRect(gdata.hitareas.itunes.rect);
+			if (gdata.hitareas.itunes != null) {
+				cp.itunesRect = _makeRectangle(gdata.hitareas.itunes.rect);
 				cp.itunesURL = gdata.hitareas.itunes.url;
 			}
 
-			if(gdata.hitareas.url != null) {
+			if (gdata.hitareas.url != null) {
 				cp.url = gdata.hitareas.url.url;
-				cp.urlRect = makeRect(gdata.hitareas.url.rect);
+				cp.urlRect = _makeRectangle(gdata.hitareas.url.rect);
 			}
 
 			_games.push(cp);
@@ -155,7 +151,7 @@ class CrossPromotion {
 		ready = true;
 	}
 
-	private static function makeRect(str:String):Rectangle {
+	private static function _makeRectangle(str:String):Rectangle {
 		var sp = str.split(",");
 		var rect = new Rectangle();
 		rect.x = sp.length > 0 ? Std.parseFloat(sp[0]) * Images.scaleX : 0;

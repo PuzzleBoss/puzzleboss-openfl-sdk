@@ -26,27 +26,44 @@ IN THE SOFTWARE.
 
 package puzzleboss;
 import flash.events.KeyboardEvent;
+import flash.events.Event;
 import flash.Lib;
+
+#if android
 import openfl.utils.JNI;
+#end
 
 class ExitApp {
 
-	public static function enable():Void {
-		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onBack);
+	private static var _active:Bool = false;
+
+	public static function enable() {
+		_active = true;
+		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, _onBack);
 	}
 
-	public static function disable():Void {
-		Lib.current.stage.removeEventListener(KeyboardEvent.KEY_UP, onBack);
+	public static function disable() {
+		_active = false;
+		Lib.current.stage.removeEventListener(KeyboardEvent.KEY_UP, _onBack);
 	}
 
-	public static function exit() {
-		var sig = "com/puzzleboss/core/ExitApp";
-		var exit = JNI.createStaticMethod(sig, "exitApp", "()V");
+	public static function onExit(e:Event) {
 		exit();
 	}
 
-	public static function onBack(e:KeyboardEvent) {
-		if(e.keyCode != KeyCodes.BACK) {
+	public static function exit() {
+		#if android
+		var sig = "com/puzzleboss/core/ExitApp";
+		var exit = JNI.createStaticMethod(sig, "exitApp", "()V");
+		exit();
+		#else
+		Lib.exit();
+		#end
+	}
+
+	private static function _onBack(e:KeyboardEvent)
+	{
+		if (!_active || e.keyCode != KeyCodes.BACK) {
 			return;
 		}
 

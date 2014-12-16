@@ -26,14 +26,10 @@ IN THE SOFTWARE.
 
 package puzzleboss;
 import flash.display.Sprite;
-import flash.display.Loader;
-import flash.display.Bitmap;
-import flash.display.BitmapData;
 import flash.geom.Rectangle;
 import flash.geom.Point;
 import flash.events.Event;
 import flash.net.URLRequest;
-import flash.Lib;
 
 class Promotion extends Sprite {
 
@@ -154,22 +150,22 @@ class Promotion extends Sprite {
 		var sp = new Point(sx, sy);
 
 		// which link
-		if(_game.amazonRect != null && _game.amazonRect.containsPoint(sp)) {
+		if (_game.amazonRect != null && _game.amazonRect.containsPoint(sp)) {
 			AppLink.amazon(_game.amazonPackage);
 			Analytics.track("/Promotion/open/amazon/" + _game.amazonPackage);
 		}
 
-		if(_game.googleRect != null && _game.googleRect.containsPoint(sp)) {
+		if (_game.googleRect != null && _game.googleRect.containsPoint(sp)) {
 			AppLink.google(_game.googlePackage);
 			Analytics.track("/Promotion/open/google/" + _game.googlePackage);
 		}
 
-		if(_game.nookRect != null && _game.nookRect.containsPoint(sp)) {
+		if (_game.nookRect != null && _game.nookRect.containsPoint(sp)) {
 			AppLink.nook(_game.nookEAN);
 			Analytics.track("/Promotion/open/nook/" + _game.nookEAN);
 		}
 
-		if(_game.itunesRect != null && _game.itunesRect.containsPoint(sp)) {
+		if (_game.itunesRect != null && _game.itunesRect.containsPoint(sp)) {
 			AppLink.link(_game.itunesURL);
 			Analytics.track("/Promotion/open/itunes/" + _game.itunesURL);
 		}

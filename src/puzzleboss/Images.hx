@@ -31,10 +31,8 @@ import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.geom.Rectangle;
 import flash.geom.Matrix;
-import flash.events.Event;
 import openfl.Assets;
 import flash.Lib;
-import Lambda;
 
 class Images {
 	private static var _cache:Map<String, BitmapData> = null;
